@@ -1,6 +1,11 @@
 package controller;
 
 public class GerenciamentoReserva implements Gerenciamento{
+	//atributos aqui!
+	
+	//construtor aqui!
+	
+	//metodos especificos aqui!
 
 	@Override
 	public void cadastrar() {
@@ -19,5 +24,7 @@ public class GerenciamentoReserva implements Gerenciamento{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	//gets e sets e toString aqui!
 
 }

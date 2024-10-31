@@ -14,6 +14,8 @@ public class Quarto {
         this.precoDiaria = precoDiaria;
         this.status = status;
     }
+    
+    //colocar funções específicas aqui depois do construtor!
 
     public int getNumQuarto() {
         return numQuarto;
@@ -53,10 +55,6 @@ public class Quarto {
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public void atualizarStatus(String novoStatus) {
-        this.status = novoStatus;
     }
 
     @Override

@@ -12,6 +12,8 @@ public class Hospede extends Pessoa {
 		this.endereco = endereco;
 		this.contato = contato;
 	}
+	
+	//colocar funções específicas aqui depois do construtor!
 
 	public String getDataNascimento() {
 		return dataNascimento;

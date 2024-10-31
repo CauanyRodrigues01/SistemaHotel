@@ -16,7 +16,7 @@ public class Funcionario extends Pessoa {
 		this.horasTrabalhadas = horasTrabalhadas;
 	}
 	
-	
+	//colocar funções específicas aqui depois do construtor!
 	
 	public String getCargo() {
 		return cargo;
@@ -53,7 +53,4 @@ public class Funcionario extends Pessoa {
 		return "Funcionario [cargo=" + cargo + ", salario=" + salario + ", turno=" + turno + "]";
 	}
 	
-	
-	
-
 }
