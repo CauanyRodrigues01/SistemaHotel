@@ -9,8 +9,9 @@ public class GerenciamentoHospede implements Gerenciamento {
 
 	@Override
 	public void adicionar() {
+		// aqui pode pedir informacoes ao usuário com prints
 		// pense em o que acontece quando vc adiciona um novo hospede: além de usar o construtor dele, depois você tem que adionar ele na lista de hospedes dessa classe aqui
-		// LEMBRE QUE O HOSPEDE NASCE COM A LISTA DE RESERVAS VAZIAS POR ISSO NAO PRECISA DELE NO CONSTRUTOR
+		// LEMBRE QUE O HOSPEDE NASCE COM A LISTA DE RESERVAS VAZIAS POR ISSO NAO PRECISA DELE NOS PARAMETROS DO CONSTRUTOR, VOCE INICIA ELE VAZIO DENTRO DA FUNCAO DO CONSTRUTOR
 	}
 
 	@Override
