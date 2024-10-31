@@ -20,7 +20,27 @@ public class Reserva {
 		this.hospede = hospede;
 		this.idReserva = idReserva;
 	}
+	
+	public int duracaoEstadia()  {
+		 int diaEntrada = dataEntrada.getDayOfYear();
+	     int diaSaida = dataSaida.getDayOfYear();
+	     return diaSaida - diaEntrada;
+	}
+	
+	public double calcularValorReserva() {
+		int duracaoDiasReserva = duracaoEstadia();
+		double precoDiaria = quarto.getPrecoDiaria();
+		return duracaoDiasReserva * precoDiaria;	
+		
+	}
 
+
+	public Integer getIdReserva() {
+		return idReserva;
+	}
+	public void setIdReserva(Integer idReserva) {
+		this.idReserva = idReserva;
+	}
 	public int getNumeroHospede() {
 		return numeroHospede;
 	}
@@ -68,19 +88,8 @@ public class Reserva {
 	}
 	
 	
-	public int duracaoEstadia()  {
-		 int diaEntrada = dataEntrada.getDayOfYear();
-	     int diaSaida = dataSaida.getDayOfYear();
-	     return diaSaida - diaEntrada;
-	}
-	
-	public double calcularValorReserva() {
-		int duracaoDiasReserva = duracaoEstadia();
-		double precoDiaria = quarto.getPrecoDiaria();
-		return duracaoDiasReserva * precoDiaria;
-				
-		
-	}
 
+	
+	
 
 }
