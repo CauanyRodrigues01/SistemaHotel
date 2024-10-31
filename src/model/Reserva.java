@@ -2,20 +2,23 @@ package model;
 
 import java.time.LocalDate;
 
+
 public class Reserva {
 	private int numeroHospede;
 	private LocalDate dataEntrada;
 	private LocalDate dataSaida;
 	private Quarto quarto;
 	private Hospede hospede;
+	private Integer idReserva;
 
-	public Reserva(int numeroHospede, LocalDate dataEntrada, LocalDate dataSaida, Quarto quarto, Hospede hospede) {
+	public Reserva(int numeroHospede, LocalDate dataEntrada, LocalDate dataSaida, Quarto quarto, Hospede hospede, Integer idReserva) {
 		super();
 		this.numeroHospede = numeroHospede;
 		this.dataEntrada = dataEntrada;
 		this.dataSaida = dataSaida;
 		this.quarto = quarto;
 		this.hospede = hospede;
+		this.idReserva = idReserva;
 	}
 
 	public int getNumeroHospede() {
@@ -63,5 +66,21 @@ public class Reserva {
 		return "Reserva [numeroHospede=" + numeroHospede + ", dataEntrada=" + dataEntrada + ", dataSaida=" + dataSaida
 				+ ", quarto=" + quarto + ", hospede=" + hospede + "]";
 	}
+	
+	
+	public int duracaoEstadia()  {
+		 int diaEntrada = dataEntrada.getDayOfYear();
+	     int diaSaida = dataSaida.getDayOfYear();
+	     return diaSaida - diaEntrada;
+	}
+	
+	public double calcularValorReserva() {
+		int duracaoDiasReserva = duracaoEstadia();
+		double precoDiaria = quarto.getPrecoDiaria();
+		return duracaoDiasReserva * precoDiaria;
+				
+		
+	}
+
 
 }
