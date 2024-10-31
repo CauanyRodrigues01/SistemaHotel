@@ -8,8 +8,11 @@ public class GerenciamentoReserva implements Gerenciamento{
 	//metodos especificos aqui!
 
 	@Override
-	public void cadastrar() {
-		// TODO Auto-generated method stub
+	public void adicionar() {
+		
+		// aqui pode pedir informacoes ao usuário com prints
+		
+		// pense em o que acontece quando vc adiciona uma nova reserva: além de usar o construtor dele, depois você tem que adionar ele na lista de hospedes dessa classe aqui
 		
 	}
 
@@ -25,6 +28,11 @@ public class GerenciamentoReserva implements Gerenciamento{
 		
 	}
 	
+	@Override
+	public void listar() {
+		// TODO Auto-generated method stub
+		
+	}
 	//gets e sets e toString aqui!
 
 }

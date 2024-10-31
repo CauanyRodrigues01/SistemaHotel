@@ -5,7 +5,8 @@ public class Hospede extends Pessoa {
 	private String dataNascimento;
 	private String endereco;
 	private String contato;
-
+	// CRIAR ATRIBUTO DE LISTA DE RESERVAS DO HOSPEDE
+	// LEMBRE QUE O HOSPEDE NASCE COM A LISTA DE RESERVAS VAZIAS POR ISSO NAO PRECISA DELE NOS PARAMETROS DO CONSTRUTOR, VOCE INICIA ELE VAZIO DENTRO DA FUNCAO DO CONSTRUTOR
 	public Hospede(String nome, String cpf, String dataNascimento, String endereco, String contato) {
 		super(nome, cpf);
 		this.dataNascimento = dataNascimento;

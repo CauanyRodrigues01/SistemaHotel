@@ -8,8 +8,9 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 	//metodos especificos aqui!
 
 	@Override
-	public void cadastrar() {
-		// TODO Auto-generated method stub
+	public void adicionar() {
+		// aqui pode pedir informacoes ao usuário com prints
+		// pense em o que acontece quando vc adiciona um novo funcionario: além de usar o construtor dele, depois você tem que adionar ele na lista de funcionarios dessa classe aqui
 		
 	}
 
@@ -21,6 +22,12 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 	@Override
 	public void excluir() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void listar() {
 		// TODO Auto-generated method stub
 		
 	}

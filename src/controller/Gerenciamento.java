@@ -1,7 +1,8 @@
 package controller;
 
 public interface Gerenciamento {
-	public void cadastrar();
+	public void adicionar();
 	public void editar();
 	public void excluir();
+	public void listar();
 }
