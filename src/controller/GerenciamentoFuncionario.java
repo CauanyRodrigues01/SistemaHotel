@@ -1,13 +1,10 @@
 package controller;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import model.Funcionario;
-import model.Hospede;
 
 public class GerenciamentoFuncionario implements Gerenciamento {
 
@@ -37,19 +34,62 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 		System.out.println("Informe o salário por hora: ");
 		double salarioPorHoraNovoFuncionario = sc.nextDouble();
+		sc.nextLine();
 
 		System.out.println("Informe o turno de trabalho: ");
 		String turnoNovoFuncionario = sc.nextLine();
 
-		Funcionario funcionario = new Funcionario(nomeNovoFuncionario, cpfNovoFuncionario, 
-				cargoNovoFuncionario, salarioPorHoraNovoFuncionario ,turnoNovoFuncionario, null);
-
+		Funcionario funcionario = new Funcionario(nomeNovoFuncionario, cpfNovoFuncionario, cargoNovoFuncionario,
+				salarioPorHoraNovoFuncionario, turnoNovoFuncionario, null);
+		
+		sc.close();
 	}
 
 	@Override
 	public void editar() {
-		// TODO Auto-generated method stub
+		Scanner sc = new Scanner(System.in);
+		System.out.println("---- Você escolheu a opção para editar os dados de um funcionário ---");
+		System.out.println("Informe o CPF do funcionario que deseja editar as informações: ");
+		boolean encontrado = false;
+		String cpfFuncionario = sc.nextLine();
+		
+		for (Funcionario funcionario : funcionarios) {
+			if(funcionario.getCpf() .equals(cpfFuncionario)) {
+				
+				System.out.println("---- Os dados do funcionário serão editados ----");
+				
+				System.out.println("Informe o nome do funcionário: ");
+				String nomeEditadoFuncionario = sc.nextLine();
 
+				System.out.println("Informe o CPF: ");
+				String cpfEditadoFuncionario = sc.nextLine();
+
+				System.out.println("Informe o cargo:: ");
+				String cargoEditadoFuncionario = sc.nextLine();
+
+				System.out.println("Novo salário por hora: ");
+				double salarioPorHoraEditadoFuncionario = sc.nextDouble();
+				sc.nextLine();
+
+				System.out.println("Informe o turno de trabalho: ");
+				String turnoEditadoFuncionario = sc.nextLine();
+				
+				funcionario.setNome(nomeEditadoFuncionario);
+				funcionario.setCpf(cpfEditadoFuncionario);
+				funcionario.setCargo(cargoEditadoFuncionario);
+				funcionario.setsalarioPorHora(salarioPorHoraEditadoFuncionario);
+				funcionario.setTurno(turnoEditadoFuncionario);
+				
+				System.out.println("Dados atualizados com sucesso!");
+				encontrado = true;
+				break;
+			}
+		}
+		if (!encontrado) {
+			System.out.println("CPF não localizado");
+		}
+
+		sc.close();
 	}
 
 	@Override
