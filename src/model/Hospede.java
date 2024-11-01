@@ -17,7 +17,7 @@ public class Hospede extends Pessoa {
         this.contato = contato;
         this.reservas = new ArrayList<>(); // Inicializando lista de reservas vazia no construtor
     }
-    
+
     // Funções específicas para manipulação de reservas do hóspede
     public void adicionarReserva(Reserva novaReserva) {
         reservas.add(novaReserva);
@@ -27,6 +27,7 @@ public class Hospede extends Pessoa {
         return reservas;
     }
 
+    // Getters e Setters
     public String getDataNascimento() {
         return dataNascimento;
     }
@@ -49,6 +50,14 @@ public class Hospede extends Pessoa {
 
     public void setContato(String contato) {
         this.contato = contato;
+    }
+
+    public List<Reserva> getReservas() {
+        return reservas;
+    }
+
+    public void setReservas(List<Reserva> reservas) {
+        this.reservas = reservas;
     }
 
     @Override
