@@ -1,24 +1,27 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 
 public class Reserva {
 	private int numeroHospede;
 	private LocalDate dataEntrada;
 	private LocalDate dataSaida;
-	private Quarto quarto;
+	private String tipoQuarto;
 	private Hospede hospede;
 	private Integer idReserva;
-
-	public Reserva(int numeroHospede, LocalDate dataEntrada, LocalDate dataSaida, Quarto quarto, Hospede hospede, Integer idReserva) {
+	private String status;
+	
+	public Reserva(int numeroHospede, LocalDate dataEntrada, LocalDate dataSaida, String tipoQuarto, Hospede hospede, Integer idReserva) {
 		super();
 		this.numeroHospede = numeroHospede;
 		this.dataEntrada = dataEntrada;
 		this.dataSaida = dataSaida;
-		this.quarto = quarto;
+		this.tipoQuarto = tipoQuarto;
 		this.hospede = hospede;
 		this.idReserva = idReserva;
+		this.status = "disponivel";
 	}
 	
 	public int duracaoEstadia()  {
@@ -27,12 +30,10 @@ public class Reserva {
 	     return diaSaida - diaEntrada;
 	}
 	
-	public double calcularValorReserva() {
-		int duracaoDiasReserva = duracaoEstadia();
-		double precoDiaria = quarto.getPrecoDiaria();
-		return duracaoDiasReserva * precoDiaria;	
-		
-	}
+	public double calcularValorReserva(double precoDiaria) {
+        int duracaoDiasReserva = duracaoEstadia();
+        return duracaoDiasReserva * precoDiaria;    
+    }
 
 
 	public Integer getIdReserva() {
@@ -65,13 +66,7 @@ public class Reserva {
 		this.dataSaida = dataSaida;
 	}
 
-	public Quarto getQuarto() {
-		return quarto;
-	}
 
-	public void setQuarto(Quarto quarto) {
-		this.quarto = quarto;
-	}
 
 	public Hospede getHospede() {
 		return hospede;
@@ -84,9 +79,18 @@ public class Reserva {
 	@Override
 	public String toString() {
 		return "Reserva [numeroHospede=" + numeroHospede + ", dataEntrada=" + dataEntrada + ", dataSaida=" + dataSaida
-				+ ", quarto=" + quarto + ", hospede=" + hospede + "]";
+				+ ", tipoQuarto=" + tipoQuarto + ", hospede=" + hospede + ", idReserva=" + idReserva + ", status="
+				+ status + "]";
 	}
-	
+
+	public Object getStatus() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+
+
 	
 
 	
