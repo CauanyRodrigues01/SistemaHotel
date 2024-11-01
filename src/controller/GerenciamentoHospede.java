@@ -1,37 +1,105 @@
 package controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
+import model.Hospede;
+
 public class GerenciamentoHospede implements Gerenciamento {
-	//atributos aqui!
-	
-	//construtor aqui!
-	
-	//metodos especificos aqui!
+    private List<Hospede> hospedes;
 
-	@Override
-	public void adicionar() {
-		// aqui pode pedir informacoes ao usuário com prints
-		// pense em o que acontece quando vc adiciona um novo hospede: além de usar o construtor dele, depois você tem que adionar ele na lista de hospedes dessa classe aqui
-		// LEMBRE QUE O HOSPEDE NASCE COM A LISTA DE RESERVAS VAZIAS POR ISSO NAO PRECISA DELE NOS PARAMETROS DO CONSTRUTOR, VOCE INICIA ELE VAZIO DENTRO DA FUNCAO DO CONSTRUTOR
-	}
+    public GerenciamentoHospede() {
+        this.hospedes = new ArrayList<>();
+    }
 
-	@Override
-	public void editar() {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void adicionar() {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("Nome do hóspede: ");
+        String nome = scanner.nextLine();
 
-	@Override
-	public void excluir() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	@Override
-	public void listar() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	//gets e sets e toString aqui!
+        System.out.print("CPF do hóspede: ");
+        String cpf = scanner.nextLine();
 
+        System.out.print("Data de nascimento do hóspede (dd/mm/aaaa): ");
+        String dataNascimento = scanner.nextLine();
+
+        System.out.print("Endereço do hóspede: ");
+        String endereco = scanner.nextLine();
+
+        System.out.print("Contato do hóspede: ");
+        String contato = scanner.nextLine();
+
+        Hospede novoHospede = new Hospede(nome, cpf, dataNascimento, endereco, contato);
+        hospedes.add(novoHospede);
+
+        System.out.println("Hóspede adicionado com sucesso!");
+    }
+
+    @Override
+    public void editar() {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("CPF do hóspede a ser editado: ");
+        String cpf = scanner.nextLine();
+
+        Optional<Hospede> hospedeExistente = hospedes.stream()
+                .filter(h -> h.getCpf().equals(cpf))
+                .findFirst();
+
+        if (hospedeExistente.isPresent()) {
+            Hospede hospede = hospedeExistente.get();
+            
+            System.out.print("Novo nome (atual: " + hospede.getNome() + "): ");
+            hospede.setNome(scanner.nextLine());
+
+            System.out.print("Nova data de nascimento (atual: " + hospede.getDataNascimento() + "): ");
+            hospede.setDataNascimento(scanner.nextLine());
+
+            System.out.print("Novo endereço (atual: " + hospede.getEndereco() + "): ");
+            hospede.setEndereco(scanner.nextLine());
+
+            System.out.print("Novo contato (atual: " + hospede.getContato() + "): ");
+            hospede.setContato(scanner.nextLine());
+
+            System.out.println("Hóspede editado com sucesso!");
+        } else {
+            System.out.println("Hóspede não encontrado.");
+        }
+    }
+
+    @Override
+    public void excluir() {
+        Scanner scanner = new Scanner(System.in);
+        
+        System.out.print("CPF do hóspede a ser excluído: ");
+        String cpf = scanner.nextLine();
+
+        boolean removed = hospedes.removeIf(h -> h.getCpf().equals(cpf));
+        
+        if (removed) {
+            System.out.println("Hóspede excluído com sucesso!");
+        } else {
+            System.out.println("Hóspede não encontrado.");
+        }
+    }
+
+    @Override
+    public void listar() {
+        if (hospedes.isEmpty()) {
+            System.out.println("Nenhum hóspede cadastrado.");
+        } else {
+            System.out.println("Lista de hóspedes:");
+            for (Hospede hospede : hospedes) {
+                System.out.println(hospede);
+            }
+        }
+    }
+
+    // Método para buscar um hóspede pelo CPF
+    public Optional<Hospede> buscarPorCpf(String cpf) {
+        return hospedes.stream().filter(h -> h.getCpf().equals(cpf)).findFirst();
+    }
 }
