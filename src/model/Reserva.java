@@ -1,29 +1,34 @@
 package model;
 
 import java.time.LocalDate;
-import java.util.List;
 
 
 public class Reserva {
 	private int numeroHospede;
 	private LocalDate dataEntrada;
 	private LocalDate dataSaida;
-	private String tipoQuarto;
+	private Quarto quarto;
 	private Hospede hospede;
 	private Integer idReserva;
 	private String status;
+
 	
-	public Reserva(int numeroHospede, LocalDate dataEntrada, LocalDate dataSaida, String tipoQuarto, Hospede hospede, Integer idReserva) {
+	public Reserva(int numeroHospede, LocalDate dataEntrada, LocalDate dataSaida, Quarto quarto, Hospede hospede,
+			Integer idReserva) {
 		super();
 		this.numeroHospede = numeroHospede;
 		this.dataEntrada = dataEntrada;
 		this.dataSaida = dataSaida;
-		this.tipoQuarto = tipoQuarto;
+		this.quarto = quarto;
 		this.hospede = hospede;
 		this.idReserva = idReserva;
-		this.status = "disponivel";
+		this.status = "disponível";
+		
 	}
-	
+
+
+
+
 	public int duracaoEstadia()  {
 		 int diaEntrada = dataEntrada.getDayOfYear();
 	     int diaSaida = dataSaida.getDayOfYear();
@@ -35,13 +40,6 @@ public class Reserva {
         return duracaoDiasReserva * precoDiaria;    
     }
 
-
-	public Integer getIdReserva() {
-		return idReserva;
-	}
-	public void setIdReserva(Integer idReserva) {
-		this.idReserva = idReserva;
-	}
 	public int getNumeroHospede() {
 		return numeroHospede;
 	}
@@ -66,7 +64,13 @@ public class Reserva {
 		this.dataSaida = dataSaida;
 	}
 
+	public Quarto getQuarto() {
+		return quarto;
+	}
 
+	public void setQuarto(Quarto quarto) {
+		this.quarto = quarto;
+	}
 
 	public Hospede getHospede() {
 		return hospede;
@@ -76,22 +80,35 @@ public class Reserva {
 		this.hospede = hospede;
 	}
 
+	public Integer getIdReserva() {
+		return idReserva;
+	}
+
+	public void setIdReserva(Integer idReserva) {
+		this.idReserva = idReserva;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+
+
+
 	@Override
 	public String toString() {
 		return "Reserva [numeroHospede=" + numeroHospede + ", dataEntrada=" + dataEntrada + ", dataSaida=" + dataSaida
-				+ ", tipoQuarto=" + tipoQuarto + ", hospede=" + hospede + ", idReserva=" + idReserva + ", status="
-				+ status + "]";
-	}
-
-	public Object getStatus() {
-		// TODO Auto-generated method stub
-		return null;
+				+ ", quarto=" + quarto + ", hospede=" + hospede + ", idReserva=" + idReserva + ", status=" + status
+				+ "]";
 	}
 
 
 
 
-	
 
 	
 	

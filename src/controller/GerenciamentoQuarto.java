@@ -2,6 +2,7 @@ package controller;
 
 import model.Quarto;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class GerenciamentoQuarto implements Gerenciamento {
@@ -137,14 +138,17 @@ public class GerenciamentoQuarto implements Gerenciamento {
         }
     }
 
-    private Quarto buscarQuarto(int numQuarto) {
+   private Quarto buscarQuarto(int numQuarto) {
         for (Quarto quarto : quartos) {
             if (quarto.getNumQuarto() == numQuarto) {
-                return quarto;
-            }
+             return quarto;
         }
-        return null;
     }
+    return null;
+ }
     
+    
+    
+ 
     // Getters, setters e outros métodos necessários
 }
