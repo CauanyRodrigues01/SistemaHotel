@@ -16,8 +16,6 @@ public class Funcionario extends Pessoa {
 		this.horasTrabalhadas = horasTrabalhadas;
 	}
 
-	// colocar funções específicas aqui depois do construtor!
-
 	public void registrarHoras(int horas) {
 		this.horasTrabalhadas += horas;
 	}
@@ -34,11 +32,11 @@ public class Funcionario extends Pessoa {
 		this.cargo = cargo;
 	}
 
-	public Double getsalarioPorHora() {
+	public Double getSalarioPorHora() {
 		return salarioPorHora;
 	}
 
-	public void setsalarioPorHora(Double salarioPorHora) {
+	public void setSalarioPorHora(Double salarioPorHora) {
 		this.salarioPorHora = salarioPorHora;
 	}
 
@@ -50,9 +48,18 @@ public class Funcionario extends Pessoa {
 		this.turno = turno;
 	}
 
+	public Integer getHorasTrabalhadas() {
+		return horasTrabalhadas;
+	}
+
+	public void setHorasTrabalhadas(Integer horasTrabalhadas) {
+		this.horasTrabalhadas = horasTrabalhadas;
+	}
+
 	@Override
 	public String toString() {
-		return "Funcionario [cargo=" + cargo + ", salario=" + salarioPorHora + ", turno=" + turno + "]";
+		return "Funcionario [cargo=" + cargo + ", salarioPorHora=" + salarioPorHora + ", turno=" + turno
+				+ ", horasTrabalhadas=" + horasTrabalhadas + "]";
 	}
 
 }
