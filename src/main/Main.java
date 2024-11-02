@@ -7,40 +7,39 @@ import controller.*;
 public class Main {
     public static void main(String[] args) {
     	
-        Scanner sc = new Scanner(System.in);
-
-        GerenciamentoHospede gerenciamentoHospede = new GerenciamentoHospede();
-        GerenciamentoFuncionario gerenciamentoFuncionario = new GerenciamentoFuncionario();
-        GerenciamentoQuarto gerenciamentoQuarto = new GerenciamentoQuarto();
-        GerenciamentoReserva gerenciamentoReserva = new GerenciamentoReserva();
-
         System.out.print("Seja Bem-Vindo ao Sistema do Hotel!\n");
 
-        while (true) {
-            System.out.println("\nMenu de gerenciamento: \n 1) Hóspede \n 2) Funcionario \n 3) Quarto \n 4) Reserva \n 0) Sair do sistema");
-            System.out.print("Digite sua opção: ");
-            int opcaoMenu = lerOpcao(sc);
+        // Usando try-with-resources para garantir o fechamento do Scanner
+        try (Scanner sc = new Scanner(System.in)) {
+            GerenciamentoHospede gerenciamentoHospede = new GerenciamentoHospede();
+            GerenciamentoFuncionario gerenciamentoFuncionario = new GerenciamentoFuncionario();
+            GerenciamentoQuarto gerenciamentoQuarto = new GerenciamentoQuarto();
+            GerenciamentoReserva gerenciamentoReserva = new GerenciamentoReserva();
 
-            if (opcaoMenu == 0) {
-                System.out.println("Saindo do Sistema, obrigada por usar.");
-                break;
+            while (true) {
+                System.out.println("\nMenu de gerenciamento: \n 1) Hóspede \n 2) Funcionario \n 3) Quarto \n 4) Reserva \n 0) Sair do sistema");
+                System.out.print("Digite sua opção: ");
+                int opcaoMenu = lerOpcao(sc);
+
+                if (opcaoMenu == 0) {
+                    System.out.println("Saindo do Sistema, obrigada por usar.");
+                    break;
+                }
+
+                Gerenciamento gerenciamento = null;
+                switch (opcaoMenu) {
+                    case 1 -> gerenciamento = gerenciamentoHospede;
+                    case 2 -> gerenciamento = gerenciamentoFuncionario;
+                    case 3 -> gerenciamento = gerenciamentoQuarto;
+                    case 4 -> gerenciamento = gerenciamentoReserva;
+                    default -> System.out.println("Opção inválida, digite novamente");
+                }
+
+                if (gerenciamento != null) {
+                    exibirMenuGerenciamento(sc, gerenciamento);
+                }
             }
-
-            Gerenciamento gerenciamento = null;
-            switch (opcaoMenu) {
-                case 1 -> gerenciamento = gerenciamentoHospede;
-                case 2 -> gerenciamento = gerenciamentoFuncionario;
-                case 3 -> gerenciamento = gerenciamentoQuarto;
-                case 4 -> gerenciamento = gerenciamentoReserva;
-                default -> System.out.println("Opção inválida, digite novamente");
-            }
-
-            if (gerenciamento != null) {
-                exibirMenuGerenciamento(sc, gerenciamento);
-            }
-        }
-
-        sc.close();
+        } // O Scanner será fechado automaticamente ao final do bloco try
     }
 
     private static int lerOpcao(Scanner sc) {
