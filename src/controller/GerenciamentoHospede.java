@@ -25,6 +25,7 @@ public class GerenciamentoHospede implements Gerenciamento {
         System.out.print("CPF do hóspede: ");
         String cpf = scanner.nextLine();
 
+        //TODO validar data
         System.out.print("Data de nascimento do hóspede (dd/mm/aaaa): ");
         String dataNascimento = scanner.nextLine();
 
@@ -38,7 +39,7 @@ public class GerenciamentoHospede implements Gerenciamento {
         
         hospedes.add(novoHospede);
 
-        System.out.println("Hóspede adicionado com sucesso!");
+        System.out.println("\nHóspede adicionado com sucesso!");
     }
 
     @Override
