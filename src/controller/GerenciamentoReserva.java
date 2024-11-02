@@ -85,7 +85,7 @@ public class GerenciamentoReserva implements Gerenciamento {
 		for (Reserva reserva : reservas) {
 			if (reserva.getIdReserva().equals(idReserva)) {
 				reserva.getQuarto().setStatus("indisponível");
-				System.out.println("Check-In realizado com sucesso para a reserva com ID: " + idReserva);
+				System.out.println("Check-In realizado com sucesso para a reserva com ID: " + reserva.getIdReserva());
 				return;
 			}
 		}

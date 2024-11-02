@@ -77,7 +77,7 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 				funcionario.setNome(nomeEditadoFuncionario);
 				funcionario.setCpf(cpfEditadoFuncionario);
 				funcionario.setCargo(cargoEditadoFuncionario);
-				funcionario.setsalarioPorHora(salarioPorHoraEditadoFuncionario);
+				funcionario.setSalarioPorHora(salarioPorHoraEditadoFuncionario);
 				funcionario.setTurno(turnoEditadoFuncionario);
 
 				System.out.println("Dados atualizados com sucesso!");
