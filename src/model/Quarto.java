@@ -1,6 +1,7 @@
 package model;
 
 public class Quarto {
+	
     private int numQuarto;
     private String tipo;
     private int capacidade;
@@ -15,8 +16,7 @@ public class Quarto {
         this.status = status;
     }
     
-    //colocar funções específicas aqui depois do construtor!
-
+    // Getters e Setters
     public int getNumQuarto() {
         return numQuarto;
     }
