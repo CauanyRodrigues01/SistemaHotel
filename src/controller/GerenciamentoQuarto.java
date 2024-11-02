@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 public class GerenciamentoQuarto implements Gerenciamento {
+	
     private ArrayList<Quarto> quartos;
 
     public GerenciamentoQuarto() {
@@ -14,6 +15,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
 
     @Override
     public void adicionar() {
+    	
         Scanner scanner = new Scanner(System.in);
         
         System.out.print("Número do quarto: ");
@@ -34,6 +36,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
         String status = scanner.nextLine();
 
         Quarto novoQuarto = new Quarto(numQuarto, tipo, capacidade, precoDiaria, status);
+        
         quartos.add(novoQuarto);
         
         System.out.println("Quarto adicionado com sucesso!");
@@ -41,6 +44,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
 
     @Override
     public void editar() {
+    	
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Informe o número do quarto que deseja editar: ");
@@ -71,6 +75,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
 
     @Override
     public void excluir() {
+    	
         Scanner scanner = new Scanner(System.in);
 
         System.out.print("Informe o número do quarto que deseja excluir: ");
@@ -88,6 +93,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
 
     @Override
     public void listar() {
+    	
         if (quartos.isEmpty()) {
             System.out.println("Não há quartos cadastrados.");
         } else {
@@ -98,6 +104,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
     }
 
     public void reservarQuarto(int numQuarto) {
+    	
         Quarto quarto = buscarQuarto(numQuarto);
         
         if (quarto != null && quarto.getStatus().equalsIgnoreCase("disponível")) {
@@ -111,6 +118,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
     }
 
     public void liberarQuarto(int numQuarto) {
+    	
         Quarto quarto = buscarQuarto(numQuarto);
         
         if (quarto != null && quarto.getStatus().equalsIgnoreCase("indisponível")) {
@@ -124,6 +132,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
     }
 
     public void listarQuartosDisponiveis() {
+    	
         boolean encontrado = false;
         
         for (Quarto quarto : quartos) {
@@ -139,6 +148,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
     }
 
    private Quarto buscarQuarto(int numQuarto) {
+	   
         for (Quarto quarto : quartos) {
             if (quarto.getNumQuarto() == numQuarto) {
              return quarto;
