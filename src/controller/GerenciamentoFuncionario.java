@@ -41,7 +41,7 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 		Funcionario funcionario = new Funcionario(nomeNovoFuncionario, cpfNovoFuncionario, cargoNovoFuncionario,
 				salarioPorHoraNovoFuncionario, turnoNovoFuncionario, null);
-		
+
 		sc.close();
 	}
 
@@ -52,12 +52,12 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 		System.out.println("Informe o CPF do funcionario que deseja editar as informações: ");
 		boolean encontrado = false;
 		String cpfFuncionario = sc.nextLine();
-		
+
 		for (Funcionario funcionario : funcionarios) {
-			if(funcionario.getCpf() .equals(cpfFuncionario)) {
-				
+			if (funcionario.getCpf().equals(cpfFuncionario)) {
+
 				System.out.println("---- Os dados do funcionário serão editados ----");
-				
+
 				System.out.println("Informe o nome do funcionário: ");
 				String nomeEditadoFuncionario = sc.nextLine();
 
@@ -73,20 +73,20 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 				System.out.println("Informe o turno de trabalho: ");
 				String turnoEditadoFuncionario = sc.nextLine();
-				
+
 				funcionario.setNome(nomeEditadoFuncionario);
 				funcionario.setCpf(cpfEditadoFuncionario);
 				funcionario.setCargo(cargoEditadoFuncionario);
 				funcionario.setsalarioPorHora(salarioPorHoraEditadoFuncionario);
 				funcionario.setTurno(turnoEditadoFuncionario);
-				
+
 				System.out.println("Dados atualizados com sucesso!");
 				encontrado = true;
 				break;
 			}
 		}
 		if (!encontrado) {
-			System.out.println("CPF não localizado");
+			System.out.println("CPF não encontrado.Certifique-se de que o funcionário está cadastrado.");
 		}
 
 		sc.close();
@@ -94,8 +94,39 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 	@Override
 	public void excluir() {
-		// TODO Auto-generated method stub
+		Scanner sc = new Scanner(System.in);
+		System.out.println("---- Você escolheu a opção para excluir um funcionário ---");
+		System.out.println("Informe o CPF do funcionario que deseja excluir: ");
+		String cpfFuncionario = sc.nextLine();
+		boolean encontrado = false;
 
+		for (Funcionario funcionario : funcionarios) {
+			if (funcionario.getCpf().equals(cpfFuncionario)) {
+				System.out.println("Funcionário encontrado!");
+				System.out.println("Nome: " + funcionario.getNome());
+				System.out.println("CPF: " + funcionario.getCpf());
+				System.out.println("Cargo: " + funcionario.getCargo());
+
+				System.out.println("Tem certeza de que deseja excluir este funcionário? (S/N)");
+				String confirmacao = sc.nextLine();
+
+				if (confirmacao.equalsIgnoreCase("S")) {
+					funcionarios.remove(funcionario);
+					System.out.println("Funcionário excluído com sucesso!");
+					encontrado = true;
+					break;
+				} else {
+					System.out.println("Exclusão cancelada.");
+					encontrado = true;
+					break;
+				}
+			}
+		}
+		if (!encontrado) {
+			System.out.println("CPF não encontrado.Certifique-se de que o funcionário está cadastrado.");
+		}
+
+		sc.close();
 	}
 
 	@Override
