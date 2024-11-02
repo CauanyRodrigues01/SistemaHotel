@@ -7,6 +7,7 @@ import java.util.Scanner;
 import model.Hospede;
 
 public class GerenciamentoHospede implements Gerenciamento {
+	
     private List<Hospede> hospedes;
 
     public GerenciamentoHospede() {
@@ -15,6 +16,7 @@ public class GerenciamentoHospede implements Gerenciamento {
 
     @Override
     public void adicionar() {
+    	
         Scanner scanner = new Scanner(System.in);
         
         System.out.print("Nome do hóspede: ");
@@ -33,6 +35,7 @@ public class GerenciamentoHospede implements Gerenciamento {
         String contato = scanner.nextLine();
 
         Hospede novoHospede = new Hospede(nome, cpf, dataNascimento, endereco, contato);
+        
         hospedes.add(novoHospede);
 
         System.out.println("Hóspede adicionado com sucesso!");
@@ -40,6 +43,7 @@ public class GerenciamentoHospede implements Gerenciamento {
 
     @Override
     public void editar() {
+    	
         Scanner scanner = new Scanner(System.in);
         
         System.out.print("CPF do hóspede a ser editado: ");
@@ -72,6 +76,7 @@ public class GerenciamentoHospede implements Gerenciamento {
 
     @Override
     public void excluir() {
+    	
         Scanner scanner = new Scanner(System.in);
         
         System.out.print("CPF do hóspede a ser excluído: ");
@@ -98,7 +103,6 @@ public class GerenciamentoHospede implements Gerenciamento {
         }
     }
 
-    // Método para buscar um hóspede pelo CPF
     public Optional<Hospede> buscarPorCpf(String cpf) {
         return hospedes.stream().filter(h -> h.getCpf().equals(cpf)).findFirst();
     }

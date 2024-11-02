@@ -16,6 +16,7 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 	@Override
 	public void adicionar() {
+		
 		Scanner sc = new Scanner(System.in);
 
 		System.out.println("---- Você escolheu a opção para cadastrar um novo funcionário ---");
@@ -46,6 +47,7 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 	@Override
 	public void editar() {
+		
 		Scanner sc = new Scanner(System.in);
 		System.out.println("---- Você escolheu a opção para editar os dados de um funcionário ---");
 		System.out.println("Informe o CPF do funcionario que deseja editar as informações: ");
@@ -93,6 +95,7 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 	@Override
 	public void excluir() {
+		
 		Scanner sc = new Scanner(System.in);
 		System.out.println("---- Você escolheu a opção para excluir um funcionário ---");
 		System.out.println("Informe o CPF do funcionario que deseja excluir: ");
