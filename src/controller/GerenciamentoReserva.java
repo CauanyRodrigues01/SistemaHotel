@@ -33,6 +33,7 @@ public class GerenciamentoReserva implements Gerenciamento {
 
 	@Override
 	public void adicionar() {
+		
 		Scanner sc = new Scanner(System.in);
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -81,33 +82,6 @@ public class GerenciamentoReserva implements Gerenciamento {
 		System.out.println("Sua reserva foi realizada com sucesso! Obrigada pela preferência.");
 	}
 
-	public void fazerCheckIn(int idReserva) {
-		for (Reserva reserva : reservas) {
-			if (reserva.getIdReserva().equals(idReserva)) {
-				reserva.getQuarto().setStatus("indisponível");
-				System.out.println("Check-In realizado com sucesso para a reserva com ID: " + reserva.getIdReserva());
-				return;
-			}
-		}
-
-		System.out.println("A Reserva do hotel não foi encontrada com o ID: " + idReserva);
-	}
-
-	public void fazerCheckOut(int idReserva, double precoDiaria) {
-		for (Reserva reserva : reservas) {
-			if (reserva.getIdReserva().equals(idReserva)) {
-				reserva.getQuarto().setStatus("disponível");
-
-				double valorTotal = reserva.calcularValorReserva(precoDiaria);
-				System.out.printf("Check-Out realizado com sucesso para a reserva com ID: %d.%n", idReserva);
-				System.out.printf("Valor total a ser pago: R$ %.2f%n", valorTotal);
-				reserva.setStatus("disponível");
-				return;
-			}
-		}
-		System.out.println("Reserva não encontrada com o ID: " + idReserva);
-	}
-
 	@Override
 	public void editar() {
 		Scanner sc = new Scanner(System.in);
@@ -147,6 +121,33 @@ public class GerenciamentoReserva implements Gerenciamento {
 				return;
 			}
 		}
+	}
+	
+	public void fazerCheckIn(int idReserva) {
+		for (Reserva reserva : reservas) {
+			if (reserva.getIdReserva().equals(idReserva)) {
+				reserva.getQuarto().setStatus("indisponível");
+				System.out.println("Check-In realizado com sucesso para a reserva com ID: " + reserva.getIdReserva());
+				return;
+			}
+		}
+
+		System.out.println("A Reserva do hotel não foi encontrada com o ID: " + idReserva);
+	}
+
+	public void fazerCheckOut(int idReserva, double precoDiaria) {
+		for (Reserva reserva : reservas) {
+			if (reserva.getIdReserva().equals(idReserva)) {
+				reserva.getQuarto().setStatus("disponível");
+
+				double valorTotal = reserva.calcularValorReserva(precoDiaria);
+				System.out.printf("Check-Out realizado com sucesso para a reserva com ID: %d.%n", idReserva);
+				System.out.printf("Valor total a ser pago: R$ %.2f%n", valorTotal);
+				reserva.setStatus("disponível");
+				return;
+			}
+		}
+		System.out.println("Reserva não encontrada com o ID: " + idReserva);
 	}
 
 	@Override
