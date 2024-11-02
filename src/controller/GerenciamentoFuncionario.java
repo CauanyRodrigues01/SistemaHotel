@@ -8,14 +8,11 @@ import model.Funcionario;
 
 public class GerenciamentoFuncionario implements Gerenciamento {
 
-	// atributos aqui!
 	private List<Funcionario> funcionarios;
 
-	// construtor aqui!
 	public GerenciamentoFuncionario() {
 		this.funcionarios = new ArrayList<>();
 	}
-	// metodos especificos aqui!
 
 	@Override
 	public void adicionar() {
@@ -39,9 +36,11 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 		System.out.println("Informe o turno de trabalho: ");
 		String turnoNovoFuncionario = sc.nextLine();
 
-		Funcionario funcionario = new Funcionario(nomeNovoFuncionario, cpfNovoFuncionario, cargoNovoFuncionario,
+		Funcionario novoFuncionario = new Funcionario(nomeNovoFuncionario, cpfNovoFuncionario, cargoNovoFuncionario,
 				salarioPorHoraNovoFuncionario, turnoNovoFuncionario, null);
-
+		
+		funcionarios.add(novoFuncionario);
+		
 		sc.close();
 	}
 
@@ -134,7 +133,5 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 		// TODO Auto-generated method stub
 
 	}
-
-	// gets e sets e toString aqui!
 
 }
