@@ -2,20 +2,18 @@ package model;
 
 import java.time.LocalDate;
 
-
 public class Reserva {
-	private int numeroHospede;
+	
+	private Integer idReserva;
 	private LocalDate dataEntrada;
 	private LocalDate dataSaida;
+	private int numeroHospede;
 	private Quarto quarto;
 	private Hospede hospede;
-	private Integer idReserva;
 	private String status;
-
 	
 	public Reserva(int numeroHospede, LocalDate dataEntrada, LocalDate dataSaida, Quarto quarto, Hospede hospede,
 			Integer idReserva) {
-		super();
 		this.numeroHospede = numeroHospede;
 		this.dataEntrada = dataEntrada;
 		this.dataSaida = dataSaida;
@@ -25,13 +23,11 @@ public class Reserva {
 		this.status = "disponível";
 		
 	}
-
-
-
-
+	
+	// Funções específicas para manipulação das Reservas
 	public int duracaoEstadia()  {
-		 int diaEntrada = dataEntrada.getDayOfYear();
-	     int diaSaida = dataSaida.getDayOfYear();
+		 int diaEntrada = this.dataEntrada.getDayOfYear();
+	     int diaSaida = this.dataSaida.getDayOfYear();
 	     return diaSaida - diaEntrada;
 	}
 	
@@ -39,13 +35,14 @@ public class Reserva {
         int duracaoDiasReserva = duracaoEstadia();
         return duracaoDiasReserva * precoDiaria;    
     }
-
-	public int getNumeroHospede() {
-		return numeroHospede;
+	
+	// Getters e Setters
+	public Integer getIdReserva() {
+		return idReserva;
 	}
 
-	public void setNumeroHospede(int numeroHospede) {
-		this.numeroHospede = numeroHospede;
+	public void setIdReserva(Integer idReserva) {
+		this.idReserva = idReserva;
 	}
 
 	public LocalDate getDataEntrada() {
@@ -64,6 +61,14 @@ public class Reserva {
 		this.dataSaida = dataSaida;
 	}
 
+	public int getNumeroHospede() {
+		return numeroHospede;
+	}
+
+	public void setNumeroHospede(int numeroHospede) {
+		this.numeroHospede = numeroHospede;
+	}
+
 	public Quarto getQuarto() {
 		return quarto;
 	}
@@ -80,14 +85,6 @@ public class Reserva {
 		this.hospede = hospede;
 	}
 
-	public Integer getIdReserva() {
-		return idReserva;
-	}
-
-	public void setIdReserva(Integer idReserva) {
-		this.idReserva = idReserva;
-	}
-
 	public String getStatus() {
 		return status;
 	}
@@ -96,21 +93,11 @@ public class Reserva {
 		this.status = status;
 	}
 
-
-
-
 	@Override
 	public String toString() {
-		return "Reserva [numeroHospede=" + numeroHospede + ", dataEntrada=" + dataEntrada + ", dataSaida=" + dataSaida
-				+ ", quarto=" + quarto + ", hospede=" + hospede + ", idReserva=" + idReserva + ", status=" + status
-				+ "]";
+		return "Reserva [idReserva=" + idReserva + ", dataEntrada=" + dataEntrada + ", dataSaida=" + dataSaida
+				+ ", numeroHospede=" + numeroHospede + ", quarto=" + quarto + ", hospede=" + hospede + ", status="
+				+ status + "]";
 	}
-
-
-
-
-
-	
-	
 
 }
