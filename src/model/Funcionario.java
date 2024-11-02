@@ -15,7 +15,8 @@ public class Funcionario extends Pessoa {
 		this.turno = turno;
 		this.horasTrabalhadas = horasTrabalhadas;
 	}
-
+	
+	// Funções específicas para manipulação do Funcionário
 	public void registrarHoras(int horas) {
 		this.horasTrabalhadas += horas;
 	}
@@ -23,7 +24,8 @@ public class Funcionario extends Pessoa {
 	public double calcularSalario() {
 		return horasTrabalhadas * salarioPorHora;
 	}
-
+	
+	// Getters e Setters
 	public String getCargo() {
 		return cargo;
 	}
