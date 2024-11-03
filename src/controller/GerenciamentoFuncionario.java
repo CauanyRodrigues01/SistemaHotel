@@ -18,33 +18,23 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 		this.sc = scanner;
 	}
 
-	private Optional<Funcionario> buscarFuncionarioPorCpf(String cpfBuscar) {
-		return funcionarios.stream().filter(h -> h.getCpf().equals(cpfBuscar)).findFirst();
+	// Método auxiliar para buscar funcionario pelo CPF e retorná-lo
+	protected Optional<Funcionario> buscarFuncionarioPorCpf(String cpfBuscar) {
+	    return funcionarios.stream()
+	                       .filter(h -> h.getCpf().equals(cpfBuscar))
+	                       .findFirst();
 	}
 
 	@Override
 	public void buscar() {
-		System.out.print("Digite o CPF do Funcionário para buscar: ");
-		String cpfBuscar = sc.nextLine(); // Usando o mesmo método para ler a entrada
-
-		Optional<Funcionario> funcionarioBuscado = funcionarios.stream().filter(h -> h.getCpf().equals(cpfBuscar))
-				.findFirst();
-
-		System.out.println(funcionarioBuscado);
-
+	    System.out.print("Digite o CPF do Funcionário para buscar: ");
+	    String cpfBuscar = sc.nextLine();
+	    buscarFuncionarioPorCpf(cpfBuscar).ifPresentOrElse(
+	        funcionario -> System.out.println("Funcionário encontrado: " + funcionario),
+	        () -> System.out.println("Funcionário não encontrado.")
+	    );
 	}
-
-	// Método para ler opções de forma segura
-	private int lerOpcao(Scanner sc) {
-        while (true) {
-            try {
-                return Integer.parseInt(sc.nextLine());
-            } catch (NumberFormatException e) {
-                System.out.print("Entrada inválida. Por favor, insira um número: ");
-            }
-        }
-	}
-
+	
 	@Override
 	public void adicionar() {
 
@@ -75,96 +65,56 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 	@Override
 	public void editar() {
+	    System.out.print("Informe o CPF do funcionário que deseja editar: ");
+	    String cpfFuncionario = sc.nextLine();
 
-		System.out.println("---- Você escolheu a opção para editar os dados de um funcionário ---");
-		System.out.println("Informe o CPF do funcionario que deseja editar as informações: ");
-		boolean encontrado = false;
-		String cpfFuncionario = sc.nextLine();
+	    buscarFuncionarioPorCpf(cpfFuncionario).ifPresentOrElse(funcionario -> {
+	        System.out.print("Novo nome do funcionário: ");
+	        funcionario.setNome(sc.nextLine());
 
-		for (Funcionario funcionario : funcionarios) {
-			if (funcionario.getCpf().equals(cpfFuncionario)) {
+	        System.out.print("Novo CPF: ");
+	        funcionario.setCpf(sc.nextLine());
 
-				System.out.println("---- Os dados do funcionário serão editados ----");
+	        System.out.print("Novo cargo: ");
+	        funcionario.setCargo(sc.nextLine());
 
-				System.out.println("Informe o nome do funcionário: ");
-				String nomeEditadoFuncionario = sc.nextLine();
+	        System.out.print("Novo salário por hora: ");
+	        funcionario.setSalarioPorHora(sc.nextDouble());
+	        sc.nextLine(); // Consumir nova linha
 
-				System.out.println("Informe o CPF: ");
-				String cpfEditadoFuncionario = sc.nextLine();
+	        System.out.print("Novo turno de trabalho: ");
+	        funcionario.setTurno(sc.nextLine());
 
-				System.out.println("Informe o cargo:: ");
-				String cargoEditadoFuncionario = sc.nextLine();
-
-				System.out.println("Novo salário por hora: ");
-				double salarioPorHoraEditadoFuncionario = sc.nextDouble();
-				sc.nextLine();
-
-				System.out.println("Informe o turno de trabalho: ");
-				String turnoEditadoFuncionario = sc.nextLine();
-
-				funcionario.setNome(nomeEditadoFuncionario);
-				funcionario.setCpf(cpfEditadoFuncionario);
-				funcionario.setCargo(cargoEditadoFuncionario);
-				funcionario.setSalarioPorHora(salarioPorHoraEditadoFuncionario);
-				funcionario.setTurno(turnoEditadoFuncionario);
-
-				System.out.println("Dados atualizados com sucesso!");
-				encontrado = true;
-				break;
-			}
-		}
-		if (!encontrado) {
-			System.out.println("CPF não encontrado.Certifique-se de que o funcionário está cadastrado.");
-		}
-
+	        System.out.println("Dados do funcionário atualizados com sucesso!");
+	    }, () -> System.out.println("Funcionário com CPF " + cpfFuncionario + " não encontrado."));
 	}
 
 	@Override
 	public void excluir() {
-
-		System.out.println("---- Você escolheu a opção para excluir um funcionário ---");
-		System.out.println("Informe o CPF do funcionario que deseja excluir: ");
-		String cpfFuncionario = sc.nextLine();
-		boolean encontrado = false;
-
-		for (Funcionario funcionario : funcionarios) {
-			if (funcionario.getCpf().equals(cpfFuncionario)) {
-				System.out.println("Funcionário encontrado!");
-				System.out.println("Nome: " + funcionario.getNome());
-				System.out.println("CPF: " + funcionario.getCpf());
-				System.out.println("Cargo: " + funcionario.getCargo());
-
-				System.out.println("Tem certeza de que deseja excluir este funcionário? (S/N)");
-				String confirmacao = sc.nextLine();
-
-				if (confirmacao.equalsIgnoreCase("S")) {
-					funcionarios.remove(funcionario);
-					System.out.println("Funcionário excluído com sucesso!");
-					encontrado = true;
-					break;
-				} else {
-					System.out.println("Exclusão cancelada.");
-					encontrado = true;
-					break;
-				}
-			}
-		}
-		if (!encontrado) {
-			System.out.println("CPF não encontrado.Certifique-se de que o funcionário está cadastrado.");
-		}
-
+	    System.out.println("Informe o CPF do funcionário que deseja excluir: ");
+	    String cpfFuncionario = sc.nextLine();
+	    buscarFuncionarioPorCpf(cpfFuncionario).ifPresentOrElse(funcionario -> 
+	    {
+	        System.out.println("Funcionário encontrado: " + funcionario);
+	        System.out.print("Tem certeza de que deseja excluir? (S/N): ");
+	        String confirmacao = sc.nextLine();
+	        if (confirmacao.trim().equalsIgnoreCase("S")) {
+	            funcionarios.remove(funcionario);
+	            System.out.println("Funcionário excluído com sucesso!");
+	        } else {
+	            System.out.println("Exclusão cancelada.");
+	        }
+	    }, () -> System.out.println("CPF não encontrado."));
 	}
 
 	@Override
 	public void listar() {
-		if (funcionarios.isEmpty()) {
-			System.out.println("Não existem funcionários cadastrados.");
-		} else {
-			System.out.println("Lista com os funcionários cadastrados:");
-			for (Funcionario funcionario : funcionarios) {
-				System.out.println(funcionario);
-			}
-		}
+	    if (funcionarios.isEmpty()) {
+	        System.out.println("Não existem funcionários cadastrados.");
+	    } else {
+	    	System.out.println("Listagem de Funcionários do Hotel:");
+	        funcionarios.forEach(System.out::println);
+	    }
 	}
 
 	@Override

@@ -61,9 +61,12 @@ public class GerenciamentoQuarto implements Gerenciamento {
             System.out.println("Não há quartos disponíveis no momento.");
         }
     }
-
-    public Optional<Quarto> buscarQuartoPorNumero(int numQuarto) {
-        return quartos.stream().filter(h -> h.getNumQuarto() == numQuarto).findFirst();
+    
+    // Método auxiliar para buscar quarto pelo número e retorná-lo
+    protected Optional<Quarto> buscarQuartoPorNumero(int numQuarto) {
+        return quartos.stream()
+                      .filter(q -> q.getNumQuarto() == numQuarto)
+                      .findFirst();
     }
     
 
@@ -76,14 +79,15 @@ public class GerenciamentoQuarto implements Gerenciamento {
     @Override
     public void buscar() {
         System.out.print("Digite o número do quarto para buscar: ");
-        int numQuarto = sc.nextInt(); // Usando o mesmo método para ler a entrada
-        
-        Optional<Quarto> quartoBuscado = quartos.stream().filter(h -> h.getNumQuarto() == (numQuarto)).findFirst();
-        
-        System.out.println(quartoBuscado);
-        
-    }
+        int numQuarto = sc.nextInt();
+        sc.nextLine(); // Consumir a nova linha
 
+        buscarQuartoPorNumero(numQuarto).ifPresentOrElse(
+            quarto -> System.out.println("Quarto encontrado: " + quarto),
+            () -> System.out.println("Quarto não encontrado.")
+        );
+    }
+    
     @Override
     public void adicionar() {
         System.out.print("Número do quarto: ");
@@ -113,10 +117,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
         System.out.print("Informe o número do quarto que deseja editar: ");
         int numQuarto = readInt();
 
-        Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
-
-        if (optionalQuarto.isPresent()) {
-            Quarto quarto = optionalQuarto.get();
+        buscarQuartoPorNumero(numQuarto).ifPresentOrElse(quarto -> {
             System.out.print("Novo tipo de quarto: ");
             quarto.setTipo(sc.nextLine());
 
@@ -131,24 +132,18 @@ public class GerenciamentoQuarto implements Gerenciamento {
             quarto.setStatus(sc.nextLine());
 
             System.out.println("Quarto atualizado com sucesso!");
-        } else {
-            System.out.println("Quarto não encontrado.");
-        }
+        }, () -> System.out.println("Quarto não encontrado."));
     }
 
     @Override
     public void excluir() {
         System.out.print("Informe o número do quarto que deseja excluir: ");
-        int numQuarto = readInt();
+        int numQuarto = readInt(); // Aqui usamos `readInt` para leitura segura
 
-        Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
-
-        if (optionalQuarto.isPresent()) {
-            quartos.remove(optionalQuarto.get());
+        buscarQuartoPorNumero(numQuarto).ifPresentOrElse(quarto -> {
+            quartos.remove(quarto);
             System.out.println("Quarto excluído com sucesso!");
-        } else {
-            System.out.println("Quarto não encontrado.");
-        }
+        }, () -> System.out.println("Quarto não encontrado."));
     }
 
     @Override
@@ -156,9 +151,8 @@ public class GerenciamentoQuarto implements Gerenciamento {
         if (quartos.isEmpty()) {
             System.out.println("Não há quartos cadastrados.");
         } else {
-            for (Quarto quarto : quartos) {
-                System.out.println(quarto);
-            }
+        	System.out.println("Listagem de Quartos do Hotel:");
+            quartos.forEach(System.out::println);
         }
     }
     

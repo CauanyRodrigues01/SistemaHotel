@@ -18,19 +18,22 @@ public class GerenciamentoHospede implements Gerenciamento {
         this.sc = scanner;
     }
     
-    public Optional<Hospede> buscarHospedePorCpf(String cpf) {
-        return hospedes.stream().filter(h -> h.getCpf().equals(cpf)).findFirst();
+    // Método auxiliar para buscar hóspede pelo CPF e retorná-lo
+    protected Optional<Hospede> buscarHospedePorCpf(String cpfBuscar) {
+        return hospedes.stream()
+                       .filter(h -> h.getCpf().equals(cpfBuscar))
+                       .findFirst();
     }
     
     @Override
     public void buscar() {
         System.out.print("Digite o CPF do hóspede para buscar: ");
-        String cpfBuscar = sc.nextLine(); // Usando o mesmo método para ler a entrada
+        String cpfBuscar = sc.nextLine();
         
-        Optional<Hospede> hospedeBuscado = hospedes.stream().filter(h -> h.getCpf().equals(cpfBuscar)).findFirst();
-        
-        System.out.println(hospedeBuscado);
-        
+        buscarHospedePorCpf(cpfBuscar).ifPresentOrElse(
+            hospede -> System.out.println("Hóspede encontrado: " + hospede),
+            () -> System.out.println("Hóspede não encontrado.")
+        );
     }
 
     @Override
@@ -61,17 +64,10 @@ public class GerenciamentoHospede implements Gerenciamento {
 
     @Override
     public void editar() {
-    	
         System.out.print("CPF do hóspede a ser editado: ");
         String cpf = sc.nextLine();
 
-        Optional<Hospede> hospedeExistente = hospedes.stream()
-                .filter(h -> h.getCpf().equals(cpf))
-                .findFirst();
-
-        if (hospedeExistente.isPresent()) {
-            Hospede hospede = hospedeExistente.get();
-            
+        buscarHospedePorCpf(cpf).ifPresentOrElse(hospede -> {
             System.out.print("Novo nome (atual: " + hospede.getNome() + "): ");
             hospede.setNome(sc.nextLine());
 
@@ -85,25 +81,20 @@ public class GerenciamentoHospede implements Gerenciamento {
             hospede.setContato(sc.nextLine());
 
             System.out.println("Hóspede editado com sucesso!");
-        } else {
-            System.out.println("Hóspede não encontrado.");
-        }
+        }, () -> System.out.println("Hóspede com CPF " + cpf + " não encontrado."));
     }
 
     @Override
     public void excluir() {
-    	
         System.out.print("CPF do hóspede a ser excluído: ");
         String cpf = sc.nextLine();
 
-        boolean removed = hospedes.removeIf(h -> h.getCpf().equals(cpf));
-        
-        if (removed) {
+        buscarHospedePorCpf(cpf).ifPresentOrElse(hospede -> {
+            hospedes.remove(hospede);
             System.out.println("Hóspede excluído com sucesso!");
-        } else {
-            System.out.println("Hóspede não encontrado.");
-        }
+        }, () -> System.out.println("Hóspede não encontrado."));
     }
+
 
     @Override
     public void listar() {

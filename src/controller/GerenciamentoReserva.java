@@ -57,19 +57,23 @@ public class GerenciamentoReserva implements Gerenciamento {
         }
     }
 
-    private Optional<Reserva> buscarReservaPorId(int idReserva) {
-        return reservas.stream().filter(reserva -> reserva.getIdReserva() == idReserva).findFirst();
+    // Método auxiliar para buscar quarto pelo id e retorná-lo
+    protected Optional<Reserva> buscarReservaPorId(int idReserva) {
+        return reservas.stream()
+                       .filter(r -> r.getIdReserva() == idReserva)
+                       .findFirst();
     }
     
 	@Override
 	public void buscar() {
-		System.out.print("Digite o ID da reserva para buscar: ");
-		int idReserva = sc.nextInt(); // Usando o mesmo método para ler a entrada
+	    System.out.print("Digite o ID da reserva para buscar: ");
+	    int idReserva = sc.nextInt();
+	    sc.nextLine(); // Consumir a nova linha
 
-		Optional<Reserva> reservaBuscado = reservas.stream().filter(h -> h.getIdReserva() == (idReserva)).findFirst();
-
-		System.out.println(reservaBuscado);
-
+	    buscarReservaPorId(idReserva).ifPresentOrElse(
+	        reserva -> System.out.println("Reserva encontrada: " + reserva),
+	        () -> System.out.println("Reserva não encontrada.")
+	    );
 	}
 
     @Override
@@ -126,15 +130,11 @@ public class GerenciamentoReserva implements Gerenciamento {
 
     @Override
     public void editar() {
-    	
         System.out.print("Informe o ID da Reserva que deseja editar: ");
         int idReserva = sc.nextInt();
         sc.nextLine(); // Consumir nova linha
 
-        Optional<Reserva> optionalReserva = buscarReservaPorId(idReserva);
-        if (optionalReserva.isPresent()) {
-            Reserva reserva = optionalReserva.get();
-
+        buscarReservaPorId(idReserva).ifPresentOrElse(reserva -> {
             System.out.print("Digite a nova data de entrada (dd/MM/yyyy): ");
             LocalDate novaDataEntrada = LocalDate.parse(sc.nextLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             reserva.setDataEntrada(novaDataEntrada);
@@ -144,35 +144,28 @@ public class GerenciamentoReserva implements Gerenciamento {
             reserva.setDataSaida(novaDataSaida);
 
             System.out.println("Reserva editada com sucesso!");
-        } else {
-            System.out.println("Reserva não encontrada com o ID: " + idReserva);
-        }
+        }, () -> System.out.println("Reserva não encontrada com o ID: " + idReserva));
     }
 
     @Override
     public void excluir() {
-    	
         System.out.print("Informe o ID da Reserva que deseja cancelar: ");
         int idReserva = sc.nextInt();
-        sc.nextLine(); // Consumir nova linha
+        sc.nextLine(); // Consumir a nova linha
 
-        Optional<Reserva> optionalReserva = buscarReservaPorId(idReserva);
-        if (optionalReserva.isPresent()) {
-            Reserva reserva = optionalReserva.get();
+        buscarReservaPorId(idReserva).ifPresentOrElse(reserva -> {
             reserva.getQuarto().setStatus("disponível");
             reservas.remove(reserva);
             System.out.println("Reserva cancelada com sucesso!");
-        } else {
-            System.out.println("Reserva não encontrada com o ID: " + idReserva);
-        }
+        }, () -> System.out.println("Reserva não encontrada com o ID: " + idReserva));
     }
 
     @Override
     public void listar() {
-        System.out.println("Listagem de Reservas do Hotel:");
         if (reservas.isEmpty()) {
             System.out.println("Não há reservas cadastradas.");
         } else {
+        	System.out.println("Listagem de Reservas do Hotel:");
             reservas.forEach(System.out::println);
         }
     }
