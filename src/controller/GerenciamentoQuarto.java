@@ -81,9 +81,6 @@ public class GerenciamentoQuarto implements Gerenciamento {
     
     @Override
     public void adicionar() {
-        int numQuarto = gerenciamentoHotel.lerNumQuarto();
-        sc.nextLine();
-
         System.out.print("Tipo do quarto (solteiro, casal, suíte): ");
         String tipo = sc.nextLine();
 
@@ -95,7 +92,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
         double precoDiaria = sc.nextDouble(); //TODO validar entrada de preco
         sc.nextLine(); // Consumir nova linha
 
-        Quarto novoQuarto = new Quarto(numQuarto, tipo, capacidade, precoDiaria, "Disponível");
+        Quarto novoQuarto = new Quarto(tipo, capacidade, precoDiaria, "Disponível");
         quartos.add(novoQuarto);
 
         System.out.println("Quarto adicionado com sucesso!");

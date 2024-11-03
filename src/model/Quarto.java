@@ -2,14 +2,15 @@ package model;
 
 public class Quarto {
 	
+	private static int contador = 1;
     private int numQuarto;
     private String tipo;
     private int capacidade;
     private double precoDiaria;
     private String status;
 
-    public Quarto(int numQuarto, String tipo, int capacidade, double precoDiaria, String status) {
-        this.numQuarto = numQuarto;
+    public Quarto(String tipo, int capacidade, double precoDiaria, String status) {
+        this.numQuarto = contador++;
         this.tipo = tipo;
         this.capacidade = capacidade;
         this.precoDiaria = precoDiaria;

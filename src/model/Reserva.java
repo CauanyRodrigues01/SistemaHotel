@@ -4,7 +4,8 @@ import java.time.LocalDate;
 
 public class Reserva {
 	
-	private Integer idReserva;
+	private static int contador = 1;	
+	private int idReserva;
 	private LocalDate dataEntrada;
 	private LocalDate dataSaida;
 	private int numeroHospede;
@@ -12,14 +13,13 @@ public class Reserva {
 	private Hospede hospede;
 	private String status;
 	
-	public Reserva(int numeroHospede, LocalDate dataEntrada, LocalDate dataSaida, Quarto quarto, Hospede hospede,
-			Integer idReserva) {
+	public Reserva(int numeroHospede, LocalDate dataEntrada, LocalDate dataSaida, Quarto quarto, Hospede hospede) {
 		this.numeroHospede = numeroHospede;
 		this.dataEntrada = dataEntrada;
 		this.dataSaida = dataSaida;
 		this.quarto = quarto;
 		this.hospede = hospede;
-		this.idReserva = idReserva;
+		this.idReserva = contador++;
 		this.status = "disponível";
 		
 	}
@@ -37,11 +37,11 @@ public class Reserva {
     }
 	
 	// Getters e Setters
-	public Integer getIdReserva() {
+	public int getIdReserva() {
 		return idReserva;
 	}
 
-	public void setIdReserva(Integer idReserva) {
+	public void setIdReserva(int idReserva) {
 		this.idReserva = idReserva;
 	}
 

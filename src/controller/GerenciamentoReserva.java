@@ -133,11 +133,7 @@ public class GerenciamentoReserva implements Gerenciamento {
 	        }
 	    }
 
-	    System.out.print("Informe o id da Reserva: "); //TODO fazer o id automático
-	    Integer idReserva = sc.nextInt();
-	    sc.nextLine(); // Limpar o buffer
-
-	    Reserva reserva = new Reserva(numeroHospede, dataEntrada, dataSaida, quarto, hospede, idReserva);
+	    Reserva reserva = new Reserva(numeroHospede, dataEntrada, dataSaida, quarto, hospede);
 	    hospede.adicionarReserva(reserva);
 	    reservas.add(reserva);
 
