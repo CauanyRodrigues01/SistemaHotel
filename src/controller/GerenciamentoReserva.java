@@ -14,169 +14,172 @@ import model.Reserva;
 
 public class GerenciamentoReserva implements Gerenciamento {
 
-	private List<Reserva> reservas;
-	private List<Hospede> hospedes;
-	private List<Quarto> quartos;
+    private final List<Reserva> reservas;
+    private final Scanner sc;
 
-	public GerenciamentoReserva() {
-		this.reservas = new ArrayList<>();
-		this.hospedes = new ArrayList<>();
-		this.quartos = new ArrayList<>();
-	}
-
-	public Optional<Hospede> buscarPorCpf(String cpf) {
-		return hospedes.stream().filter(h -> h.getCpf().equals(cpf)).findFirst();
-	}
-
-	private Optional<Quarto> buscarQuarto(int numQuarto) {
-		return quartos.stream().filter(quarto -> quarto.getNumQuarto() == numQuarto).findFirst();
-	}
-	
-    // Sem métodos específicos, então retorna um mapa vazio
-    public Map<Integer, String> getOpcoesEspecificas() {
-        return Map.of();
+    public GerenciamentoReserva(Scanner scanner) {
+        this.reservas = new ArrayList<>();
+        this.sc = scanner;
     }
 
-	@Override
-	public void adicionar() {
-		
-		Scanner sc = new Scanner(System.in);
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    public void fazerCheckIn(Scanner sc) {
+        System.out.print("Digite o ID da Reserva: ");
+        int idReserva = sc.nextInt();
+        sc.nextLine(); // Consumir nova linha
 
-		System.out.println("Informe o CPF do Hóspde: ");
-		String cpf = sc.nextLine();
+        Optional<Reserva> optionalReserva = buscarReservaPorId(idReserva);
+        if (optionalReserva.isPresent()) {
+            Reserva reserva = optionalReserva.get();
+            reserva.getQuarto().setStatus("indisponível");
+            System.out.println("Check-In realizado com sucesso para a reserva com ID: " + reserva.getIdReserva());
+        } else {
+            System.out.println("Reserva não encontrada com o ID: " + idReserva);
+        }
+    }
 
-		Optional<Hospede> hospedeOptional = buscarPorCpf(cpf);
+    public void fazerCheckOut(Scanner sc) {
+        System.out.print("Digite o ID da Reserva: ");
+        int idReserva = sc.nextInt();
+        sc.nextLine(); // Consumir nova linha
 
-		if (hospedeOptional.isEmpty()) {
-			System.out.println("Hóspede não encontrado. Certifique-se de que o hóspede está cadastrado.");
-			return;
-		}
+        Optional<Reserva> optionalReserva = buscarReservaPorId(idReserva);
+        if (optionalReserva.isPresent()) {
+            Reserva reserva = optionalReserva.get();
+            Quarto quartoDaReserva = reserva.getQuarto();
+            quartoDaReserva.setStatus("disponível");
 
-		Hospede hospede = hospedeOptional.get();
+            double valorTotal = reserva.calcularValorReserva(quartoDaReserva.getPrecoDiaria());
+            System.out.printf("Check-Out realizado com sucesso para a reserva com ID: %d.%n", idReserva);
+            System.out.printf("Valor total a ser pago: R$ %.2f%n", valorTotal);
+            reserva.setStatus("disponível");
+        } else {
+            System.out.println("Reserva não encontrada com o ID: " + idReserva);
+        }
+    }
 
-		System.out.println("Digite a quantidade de hóspedes: ");
-		int numeroHospede = sc.nextInt();
-		sc.nextLine();
+    private Optional<Reserva> buscarReservaPorId(int idReserva) {
+        return reservas.stream().filter(reserva -> reserva.getIdReserva() == idReserva).findFirst();
+    }
 
-		System.out.print("Digite a data de entrada (dd/MM/yyyy): ");
-		String dataEntradaReserva = sc.nextLine();
-		LocalDate dataEntrada = LocalDate.parse(dataEntradaReserva, formatter);
+    @Override
+    public Map<Integer, String> getOpcoesEspecificas() {
+        return Map.of(
+            5, "Fazer Check-in",
+            6, "Fazer Check-out"
+        );
+    }
 
-		System.out.println("Digite a data de saída (dd/MM/yyyy): ");
-		String dataSaidaReserva = sc.nextLine();
-		LocalDate dataSaida = LocalDate.parse(dataSaidaReserva, formatter);
+    @Override
+    public void executarOpcaoEspecifica(int opcao, Scanner sc) {
+        switch (opcao) {
+            case 5 -> fazerCheckIn(sc);
+            case 6 -> fazerCheckOut(sc);
+            default -> System.out.println("Opção específica inválida");
+        }
+    }
 
-		System.out.println("Digite o número do Quarto: ");
-		int numQuarto = sc.nextInt();
-		Optional<Quarto> quartoOptional = buscarQuarto(numQuarto);
+    @Override
+    public void adicionar() {
+    	
+    	Scanner sc = new Scanner(System.in);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-		if (quartoOptional.isEmpty()) {
-			System.out.println("Quarto não encontrado. Certifique-se de que o quarto está cadastrado.");
-			return;
-		}
+        System.out.print("Informe o CPF do Hóspede: ");
+        String cpf = sc.nextLine();
 
-		Quarto quarto = quartoOptional.get();
+        GerenciamentoHospede gerenciamentoHospede = new GerenciamentoHospede(sc);
+        Optional<Hospede> hospedeOptional = gerenciamentoHospede.buscarPorCpf(cpf);
 
-		System.out.println("Informe o id da Reserva");
-		Integer idReserva = sc.nextInt();
+        if (hospedeOptional.isEmpty()) {
+            System.out.println("Hóspede não encontrado. Certifique-se de que o hóspede está cadastrado.");
+            return;
+        }
 
-		Reserva reserva = new Reserva(numeroHospede, dataEntrada, dataSaida, quarto, hospede, idReserva);
-		hospede.adicionarReserva(reserva);
-		reservas.add(reserva);
+        Hospede hospede = hospedeOptional.get();
 
-		System.out.println("Sua reserva foi realizada com sucesso! Obrigada pela preferência.");
-	}
+        System.out.print("Digite a quantidade de hóspedes: ");
+        int numeroHospede = sc.nextInt();
+        sc.nextLine(); // Consumir nova linha
 
-	@Override
-	public void editar() {
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Informe o ID da Reserva que deseja editar: ");
-		int idReserva = sc.nextInt();
+        System.out.print("Digite a data de entrada (dd/MM/yyyy): ");
+        LocalDate dataEntrada = LocalDate.parse(sc.nextLine(), formatter);
 
-		for (Reserva reserva : reservas) {
-			if (reserva.getIdReserva().equals(idReserva)) {
-				System.out.print("Digite a nova data de entrada (dd/MM/yyyy): ");
-				String novaDataEntrada = sc.next();
-				LocalDate dataEntrada = LocalDate.parse(novaDataEntrada, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-				reserva.setDataEntrada(dataEntrada);
+        System.out.print("Digite a data de saída (dd/MM/yyyy): ");
+        LocalDate dataSaida = LocalDate.parse(sc.nextLine(), formatter);
 
-				System.out.print("Digite a nova data de saída (dd/MM/yyyy): ");
-				String novaDataSaida = sc.next();
-				LocalDate dataSaida = LocalDate.parse(novaDataSaida, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-				reserva.setDataSaida(dataSaida);
+        System.out.print("Digite o número do Quarto: ");
+        int numQuarto = sc.nextInt();
 
-				System.out.println("Reserva editada com sucesso!");
-				return;
-			}
-		}
+        GerenciamentoQuarto gerenciamentoQuarto = new GerenciamentoQuarto(sc);
+        Optional<Quarto> quartoOptional = gerenciamentoQuarto.buscarQuarto(numQuarto);
 
-	}
+        if (quartoOptional.isEmpty()) {
+            System.out.println("Quarto não encontrado. Certifique-se de que o quarto está cadastrado.");
+            return;
+        }
 
-	@Override
-	public void excluir() {
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Informe o ID da Reserva que deseja cancelar: ");
-		int idReserva = sc.nextInt();
+        Quarto quarto = quartoOptional.get();
 
-		for (Reserva reserva : reservas) {
-			if (reserva.getIdReserva().equals(idReserva)) {
-				reserva.getQuarto().setStatus("disponível");
-				reservas.remove(reserva);
-				System.out.println("Reserva cancelada com sucesso!");
-				return;
-			}
-		}
-	}
-	
-	public void fazerCheckIn(int idReserva) {
-		for (Reserva reserva : reservas) {
-			if (reserva.getIdReserva().equals(idReserva)) {
-				reserva.getQuarto().setStatus("indisponível");
-				System.out.println("Check-In realizado com sucesso para a reserva com ID: " + reserva.getIdReserva());
-				return;
-			}
-		}
+        System.out.print("Informe o id da Reserva: ");
+        Integer idReserva = sc.nextInt();
 
-		System.out.println("A Reserva do hotel não foi encontrada com o ID: " + idReserva);
-	}
+        Reserva reserva = new Reserva(numeroHospede, dataEntrada, dataSaida, quarto, hospede, idReserva);
+        hospede.adicionarReserva(reserva);
+        reservas.add(reserva);
 
-	public void fazerCheckOut(int idReserva, double precoDiaria) {
-		for (Reserva reserva : reservas) {
-			if (reserva.getIdReserva().equals(idReserva)) {
-				reserva.getQuarto().setStatus("disponível");
+        System.out.println("Sua reserva foi realizada com sucesso! Obrigada pela preferência.");
+    }
 
-				double valorTotal = reserva.calcularValorReserva(precoDiaria);
-				System.out.printf("Check-Out realizado com sucesso para a reserva com ID: %d.%n", idReserva);
-				System.out.printf("Valor total a ser pago: R$ %.2f%n", valorTotal);
-				reserva.setStatus("disponível");
-				return;
-			}
-		}
-		System.out.println("Reserva não encontrada com o ID: " + idReserva);
-	}
+    @Override
+    public void editar() {
+    	Scanner sc = new Scanner(System.in);
+        System.out.print("Informe o ID da Reserva que deseja editar: ");
+        int idReserva = sc.nextInt();
+        sc.nextLine(); // Consumir nova linha
 
-	@Override
-	public void listar() {
-		System.out.println("Listagem de Reservas do Hotel:");
-		for (Reserva reserva : reservas) {
-			System.out.println(reserva);
-		}
-	}
+        Optional<Reserva> optionalReserva = buscarReservaPorId(idReserva);
+        if (optionalReserva.isPresent()) {
+            Reserva reserva = optionalReserva.get();
 
-	public List<Hospede> getHospedes() {
-		return hospedes;
-	}
+            System.out.print("Digite a nova data de entrada (dd/MM/yyyy): ");
+            LocalDate novaDataEntrada = LocalDate.parse(sc.nextLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            reserva.setDataEntrada(novaDataEntrada);
 
-	public void setHospedes(List<Hospede> hospedes) {
-		this.hospedes = hospedes;
-	}
+            System.out.print("Digite a nova data de saída (dd/MM/yyyy): ");
+            LocalDate novaDataSaida = LocalDate.parse(sc.nextLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            reserva.setDataSaida(novaDataSaida);
 
-	public List<Reserva> getReservas() {
-		return reservas;
-	}
+            System.out.println("Reserva editada com sucesso!");
+        } else {
+            System.out.println("Reserva não encontrada com o ID: " + idReserva);
+        }
+    }
 
-	public void setReservas(List<Reserva> reservas) {
-		this.reservas = reservas;
-	}
+    @Override
+    public void excluir() {
+    	Scanner sc = new Scanner(System.in);
+        System.out.print("Informe o ID da Reserva que deseja cancelar: ");
+        int idReserva = sc.nextInt();
+        sc.nextLine(); // Consumir nova linha
+
+        Optional<Reserva> optionalReserva = buscarReservaPorId(idReserva);
+        if (optionalReserva.isPresent()) {
+            Reserva reserva = optionalReserva.get();
+            reserva.getQuarto().setStatus("disponível");
+            reservas.remove(reserva);
+            System.out.println("Reserva cancelada com sucesso!");
+        } else {
+            System.out.println("Reserva não encontrada com o ID: " + idReserva);
+        }
+    }
+
+    @Override
+    public void listar() {
+        System.out.println("Listagem de Reservas do Hotel:");
+        if (reservas.isEmpty()) {
+            System.out.println("Não há reservas cadastradas.");
+        } else {
+            reservas.forEach(System.out::println);
+        }
+    }
 }

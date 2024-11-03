@@ -5,19 +5,45 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
+
+import model.Funcionario;
 import model.Hospede;
 
 public class GerenciamentoHospede implements Gerenciamento {
 	
-    private List<Hospede> hospedes;
+    private final List<Hospede> hospedes;
+    private final Scanner sc;
 
-    public GerenciamentoHospede() {
+    public GerenciamentoHospede(Scanner scanner) {
         this.hospedes = new ArrayList<>();
+        this.sc = scanner;
     }
     
-    // Sem métodos específicos, então retorna um mapa vazio
+    public Optional<Hospede> buscarPorCpf(String cpf) {
+        return hospedes.stream().filter(h -> h.getCpf().equals(cpf)).findFirst();
+    }
+    
+    private void buscarHospede(Scanner sc) {
+        System.out.print("Digite o CPF do hóspede para buscar: ");
+        String cpfBuscar = sc.nextLine(); // Usando o mesmo método para ler a entrada
+        
+        Optional<Hospede> hospedeBuscado = hospedes.stream().filter(h -> h.getCpf().equals(cpfBuscar)).findFirst();
+        
+        System.out.println(hospedeBuscado);
+        
+    }
+    
+    @Override
     public Map<Integer, String> getOpcoesEspecificas() {
-        return Map.of();
+        return Map.of(5, "Buscar Hóspede");
+    }
+
+    @Override
+    public void executarOpcaoEspecifica(int opcao, Scanner sc) {
+        switch (opcao) {
+            case 5 -> buscarHospede(sc);
+            default -> System.out.println("Opção específica inválida");
+        }
     }
 
     @Override
@@ -108,9 +134,5 @@ public class GerenciamentoHospede implements Gerenciamento {
                 System.out.println(hospede);
             }
         }
-    }
-
-    public Optional<Hospede> buscarPorCpf(String cpf) {
-        return hospedes.stream().filter(h -> h.getCpf().equals(cpf)).findFirst();
     }
 }

@@ -3,21 +3,57 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
 
 import model.Funcionario;
 
 public class GerenciamentoFuncionario implements Gerenciamento {
 
-	private List<Funcionario> funcionarios;
+	private final List<Funcionario> funcionarios;
+	private final Scanner sc;
 
-	public GerenciamentoFuncionario() {
+	public GerenciamentoFuncionario(Scanner scanner) {
 		this.funcionarios = new ArrayList<>();
+		this.sc = scanner;
 	}
-
-    // Sem métodos específicos, então retorna um mapa vazio
+    
+    public Optional<Funcionario> buscarFuncionarioPorCpf(String cpfBuscar) {
+        return funcionarios.stream().filter(h -> h.getCpf().equals(cpfBuscar)).findFirst();
+    }
+    
+    private void buscarFuncionario(Scanner sc) {
+        System.out.print("Digite o CPF do Funcionário para buscar: ");
+        String cpfBuscar = sc.nextLine(); // Usando o mesmo método para ler a entrada
+        
+        Optional<Funcionario> funcionarioBuscado = funcionarios.stream().filter(h -> h.getCpf().equals(cpfBuscar)).findFirst();
+        
+        System.out.println(funcionarioBuscado);
+        
+    }
+    
+    @Override
     public Map<Integer, String> getOpcoesEspecificas() {
-        return Map.of();
+        return Map.of(5, "Buscar Funcionário");
+    }
+
+    @Override
+    public void executarOpcaoEspecifica(int opcao, Scanner sc) {
+        switch (opcao) {
+            case 5 -> buscarFuncionario(sc);
+            default -> System.out.println("Opção específica inválida");
+        }
+    }
+    
+    // Método para ler opções de forma segura
+    private int lerOpcao(Scanner sc) {
+        while (true) {
+            try {
+                return Integer.parseInt(sc.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.print("Entrada inválida. Por favor, insira um número: ");
+            }
+        }
     }
 
 	@Override

@@ -4,11 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Scanner;
 
-import controller.Gerenciamento;
-import controller.GerenciamentoFuncionario;
-import controller.GerenciamentoHospede;
-import controller.GerenciamentoQuarto;
-import controller.GerenciamentoReserva;
+import controller.*;
 
 public class Main {
 	public static void main(String[] args) {
@@ -17,10 +13,10 @@ public class Main {
 
 		// Usando try-with-resources para garantir o fechamento do Scanner
 		try (Scanner sc = new Scanner(System.in)) {
-			GerenciamentoHospede gerenciamentoHospede = new GerenciamentoHospede();
-			GerenciamentoFuncionario gerenciamentoFuncionario = new GerenciamentoFuncionario();
-			GerenciamentoQuarto gerenciamentoQuarto = new GerenciamentoQuarto();
-			GerenciamentoReserva gerenciamentoReserva = new GerenciamentoReserva();
+			GerenciamentoHospede gerenciamentoHospede = new GerenciamentoHospede(sc);
+			GerenciamentoFuncionario gerenciamentoFuncionario = new GerenciamentoFuncionario(sc);
+			GerenciamentoQuarto gerenciamentoQuarto = new GerenciamentoQuarto(sc);
+			GerenciamentoReserva gerenciamentoReserva = new GerenciamentoReserva(sc);
 
 			while (true) {
 				System.out.println(
@@ -60,47 +56,38 @@ public class Main {
 	}
 
 	private static void exibirMenuGerenciamento(Scanner sc, Gerenciamento gerenciamento) {
-		while (true) {
-			System.out.println("\nOpções Disponíveis: \n 1) Adicionar \n 2) Editar \n 3) Excluir \n 4) Listar");
+	    while (true) {
+	        System.out.println("\nOpções Disponíveis: ");
+	        System.out.println(" 1) Adicionar ");
+	        System.out.println(" 2) Editar ");
+	        System.out.println(" 3) Excluir ");
+	        System.out.println(" 4) Listar ");
 
-			// Verifica se há opções específicas e as exibe
-			Map<Integer, String> opcoesEspecificas = Map.of();
-			try {
-				Method method = gerenciamento.getClass().getMethod("getOpcoesEspecificas");
-				opcoesEspecificas = (Map<Integer, String>) method.invoke(gerenciamento);
-				for (Map.Entry<Integer, String> opcao : opcoesEspecificas.entrySet()) {
-					System.out.println(" " + opcao.getKey() + ") " + opcao.getValue());
-				}
-			} catch (Exception e) {
-				System.out.println("Erro ao carregar opções específicas: " + e.getMessage());
-			}
+	        // Exibir opções específicas
+	        for (var opcaoEspecifica : gerenciamento.getOpcoesEspecificas().entrySet()) {
+	            System.out.printf(" %d) %s\n", opcaoEspecifica.getKey(), opcaoEspecifica.getValue());
+	        }
 
-			System.out.println(" 0) Voltar para menu principal");
-			System.out.print("Digite sua opção: ");
-			int opcao = lerOpcao(sc);
-			System.out.println(); // pular linha (medida meramente visual)
+	        System.out.println(" 0) Voltar para menu principal"); // Opção 0 no final
+	        System.out.print("Digite sua opção: ");
+	        int opcao = lerOpcao(sc);
+	        System.out.println(); // Pular linha
 
-			switch (opcao) {
-				case 1 -> gerenciamento.adicionar();
-				case 2 -> gerenciamento.editar();
-				case 3 -> gerenciamento.excluir();
-				case 4 -> gerenciamento.listar();
-				case 0 -> { return; } // Sai do menu de gerenciamento e volta ao principal
-				default -> {
-					// Verifica se a opção específica existe e executa o método usando reflection
-					if (opcoesEspecificas.containsKey(opcao)) {
-						try {
-							String metodoNome = opcoesEspecificas.get(opcao).replaceAll(" ", "");
-							Method metodoEspecifico = gerenciamento.getClass().getMethod(metodoNome);
-							metodoEspecifico.invoke(gerenciamento);
-						} catch (Exception e) {
-							System.out.println("Erro ao executar opção específica: " + e.getMessage());
-						}
-					} else {
-						System.out.println("Opção inválida, digite novamente");
-					}
-				}
-			}
-		}
+	        switch (opcao) {
+	            case 1 -> gerenciamento.adicionar();
+	            case 2 -> gerenciamento.editar();
+	            case 3 -> gerenciamento.excluir();
+	            case 4 -> gerenciamento.listar();
+	            case 0 -> { return; } // Volta para o menu principal
+	            default -> {
+	                if (gerenciamento.getOpcoesEspecificas().containsKey(opcao)) {
+	                    // Executa a opção específica
+	                    gerenciamento.executarOpcaoEspecifica(opcao, sc);
+	                } else {
+	                    System.out.println("Opção inválida, digite novamente");
+	                }
+	            }
+	        }
+	    }
 	}
 }
