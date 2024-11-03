@@ -1,16 +1,17 @@
 package model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Hospede extends Pessoa {
     
-    private String dataNascimento;
+    private LocalDate dataNascimento;
     private String endereco;
     private String contato;
     private List<Reserva> reservas; // Lista de reservas do hóspede, inicializada vazia
 
-    public Hospede(String nome, String cpf, String dataNascimento, String endereco, String contato) {
+    public Hospede(String nome, String cpf, LocalDate dataNascimento, String endereco, String contato) {
         super(nome, cpf);
         this.dataNascimento = dataNascimento;
         this.endereco = endereco;
@@ -28,11 +29,11 @@ public class Hospede extends Pessoa {
     }
 
     // Getters e Setters
-    public String getDataNascimento() {
+    public LocalDate getDataNascimento() {
         return dataNascimento;
     }
 
-    public void setDataNascimento(String dataNascimento) {
+    public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }
 

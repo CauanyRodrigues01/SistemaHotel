@@ -1,10 +1,7 @@
 package controller;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,15 +14,17 @@ import model.Reserva;
 public class GerenciamentoReserva implements Gerenciamento {
 
     private final List<Reserva> reservas;
+    private final GerenciamentoHotel gerenciamentoHotel;
     private final Scanner sc;
 
-    public GerenciamentoReserva(Scanner scanner) {
+    public GerenciamentoReserva(Scanner scanner, GerenciamentoHotel gerenciamentoHotel) {
         this.reservas = new ArrayList<>();
         this.sc = scanner;
+        this.gerenciamentoHotel = gerenciamentoHotel;
     }
 
     public void fazerCheckIn() {
-        int idReserva = lerIdReserva();
+        int idReserva = this.gerenciamentoHotel.lerId();
 
         Optional<Reserva> optionalReserva = buscarReservaPorId(idReserva);
         if (optionalReserva.isPresent()) {
@@ -44,7 +43,7 @@ public class GerenciamentoReserva implements Gerenciamento {
     }
 
     public void fazerCheckOut() {
-        int idReserva = lerIdReserva();
+        int idReserva = this.gerenciamentoHotel.lerId();
 
         Optional<Reserva> optionalReserva = buscarReservaPorId(idReserva);
         if (optionalReserva.isPresent()) {
@@ -64,84 +63,6 @@ public class GerenciamentoReserva implements Gerenciamento {
             System.out.println("Reserva não encontrada com o ID: " + idReserva);
         }
     }
-    
-    private String lerCpf() {
-        while (true) {
-            System.out.print("Informe o CPF do Hóspede: ");
-            String cpf = sc.nextLine();
-            if (cpf.matches("\\d{11}")) {
-                return cpf; // CPF válido (apenas números e 11 dígitos)
-            } else {
-                System.out.println("CPF inválido. Certifique-se de que está no formato correto (11 dígitos).");
-            }
-        }
-    }
-
-    private int lerIdReserva() {
-        while (true) {
-            System.out.print("Digite o ID da Reserva: ");
-            try {
-                int id = sc.nextInt();
-                if (id <= 0) {
-                    System.out.println("\nDigite um valor maior que zero.\n");
-                } else {
-                    return id;
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Entrada inválida. Por favor, insira um número inteiro para o ID da reserva.");
-            } finally {
-            	sc.nextLine(); // Limpar o buffer
-            }
-        }
-    }
-    
-    private int lerNumeroHospedes() {
-        while (true) {
-            System.out.print("Digite a quantidade de hóspedes (máximo 10): ");
-            try {
-                int numeroHospede = sc.nextInt();
-                if (numeroHospede <= 0 || numeroHospede > 10) {
-                    System.out.println("A quantidade de hóspedes deve ser entre 1 e 10.");
-                } else {
-                    return numeroHospede;
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Entrada inválida. Por favor, insira um número inteiro.");
-            } finally {
-            	sc.nextLine(); // Limpar o buffer
-            }
-        }
-    }
-    
-    private LocalDate lerDataEntrada() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        while (true) {
-            System.out.print("Digite a data de entrada (dd/MM/yyyy): ");
-            try {
-                LocalDate dataEntrada = LocalDate.parse(sc.nextLine(), formatter);
-                return dataEntrada;
-            } catch (DateTimeParseException e) {
-                System.out.println("Formato de data inválido. Tente novamente.");
-            }
-        }
-    }
-
-    private LocalDate lerDataSaida(LocalDate dataEntrada) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        while (true) {
-            System.out.print("Digite a data de saída (dd/MM/yyyy): ");
-            try {
-                LocalDate dataSaida = LocalDate.parse(sc.nextLine(), formatter);
-                if (dataSaida.isBefore(dataEntrada)) {
-                    System.out.println("A data de saída deve ser posterior à data de entrada.");
-                } else {
-                    return dataSaida;
-                }
-            } catch (DateTimeParseException e) {
-                System.out.println("Formato de data inválido. Tente novamente.");
-            }
-        }
-    }
 
     // Método auxiliar para buscar quarto pelo id e retorná-lo
     protected Optional<Reserva> buscarReservaPorId(int idReserva) {
@@ -152,7 +73,7 @@ public class GerenciamentoReserva implements Gerenciamento {
     
 	@Override
 	public void buscar() {
-	    int idReserva = lerIdReserva();
+	    int idReserva = this.gerenciamentoHotel.lerId();
 
 	    buscarReservaPorId(idReserva).ifPresentOrElse(
 	        reserva -> System.out.println("Reserva encontrada: " + reserva),
@@ -161,11 +82,11 @@ public class GerenciamentoReserva implements Gerenciamento {
 	}
 
     @Override
-    public void adicionar() {
+    public void adicionar() { //TODO mover para gerenciamento hotel
 
-        String cpf = lerCpf();
+        String cpf = this.gerenciamentoHotel.lerCpf();
 
-        GerenciamentoHospede gerenciamentoHospede = new GerenciamentoHospede(sc);
+        GerenciamentoHospede gerenciamentoHospede = new GerenciamentoHospede(sc, this.gerenciamentoHotel);
         Optional<Hospede> hospedeOptional = gerenciamentoHospede.buscarHospedePorCpf(cpf);
         
         if (hospedeOptional.isEmpty()) {
@@ -175,16 +96,16 @@ public class GerenciamentoReserva implements Gerenciamento {
 
         Hospede hospede = hospedeOptional.get();
 
-        int numeroHospede = lerNumeroHospedes();
+        int numeroHospede = this.gerenciamentoHotel.lerNumeroHospedes();
 
-        LocalDate dataEntrada = lerDataEntrada();
+        LocalDate dataEntrada = this.gerenciamentoHotel.lerDataEntrada();
 
-        LocalDate dataSaida = lerDataSaida(dataEntrada);
+        LocalDate dataSaida = this.gerenciamentoHotel.lerDataSaida(dataEntrada);
 
         System.out.print("Digite o número do Quarto: ");
         int numQuarto = sc.nextInt();
 
-        GerenciamentoQuarto gerenciamentoQuarto = new GerenciamentoQuarto(sc);
+        GerenciamentoQuarto gerenciamentoQuarto = new GerenciamentoQuarto(sc, gerenciamentoHotel);
         Optional<Quarto> quartoOptional = gerenciamentoQuarto.buscarQuartoPorNumero(numQuarto);
 
         if (quartoOptional.isEmpty()) {
@@ -206,15 +127,15 @@ public class GerenciamentoReserva implements Gerenciamento {
 
     @Override
     public void editar() {
-    	int idReserva = lerIdReserva();
+    	int idReserva = this.gerenciamentoHotel.lerId();
 
         buscarReservaPorId(idReserva).ifPresentOrElse(reserva -> {
             System.out.print("Digite a nova data de entrada (dd/MM/yyyy): ");
             
-            LocalDate novaDataEntrada = lerDataEntrada();
+            LocalDate novaDataEntrada = this.gerenciamentoHotel.lerDataEntrada();
             reserva.setDataEntrada(novaDataEntrada);
             
-            LocalDate novaDataSaida = lerDataSaida(novaDataEntrada);
+            LocalDate novaDataSaida = this.gerenciamentoHotel.lerDataSaida(novaDataEntrada);
             reserva.setDataSaida(novaDataSaida);
 
             System.out.println("Reserva editada com sucesso!");
@@ -223,7 +144,7 @@ public class GerenciamentoReserva implements Gerenciamento {
 
     @Override
     public void excluir() {
-    	int idReserva = lerIdReserva();
+    	int idReserva = this.gerenciamentoHotel.lerId();
 
         buscarReservaPorId(idReserva).ifPresentOrElse(reserva -> {
             reserva.getQuarto().setStatus("disponível");

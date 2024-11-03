@@ -1,5 +1,6 @@
 package controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -12,10 +13,12 @@ public class GerenciamentoHospede implements Gerenciamento {
 	
     private final List<Hospede> hospedes;
     private final Scanner sc;
+    private final GerenciamentoHotel gerenciamentoHotel;
 
-    public GerenciamentoHospede(Scanner scanner) {
+    public GerenciamentoHospede(Scanner scanner, GerenciamentoHotel gerenciamentoHotel) {
         this.hospedes = new ArrayList<>();
         this.sc = scanner;
+        this.gerenciamentoHotel = gerenciamentoHotel;
     }
     
 	// Método auxiliar para buscar hóspede pelo CPF e retorná-lo
@@ -27,8 +30,7 @@ public class GerenciamentoHospede implements Gerenciamento {
     
     @Override
     public void buscar() {
-        System.out.print("Digite o CPF do hóspede para buscar: ");
-        String cpfBuscar = sc.nextLine();
+        String cpfBuscar = gerenciamentoHotel.lerCpf();
         
         buscarHospedePorCpf(cpfBuscar).ifPresentOrElse(
             hospede -> System.out.println("Hóspede encontrado: " + hospede),
@@ -41,13 +43,10 @@ public class GerenciamentoHospede implements Gerenciamento {
         
         System.out.print("Nome do hóspede: ");
         String nome = sc.nextLine();
+        
+        String cpf = gerenciamentoHotel.lerCpf();
 
-        System.out.print("CPF do hóspede: ");
-        String cpf = sc.nextLine();
-
-        //TODO validar data
-        System.out.print("Data de nascimento do hóspede (dd/mm/aaaa): ");
-        String dataNascimento = sc.nextLine();
+        LocalDate dataNascimento = gerenciamentoHotel.lerDataNascimento();
 
         System.out.print("Endereço do hóspede: ");
         String endereco = sc.nextLine();
@@ -64,15 +63,15 @@ public class GerenciamentoHospede implements Gerenciamento {
 
     @Override
     public void editar() {
-        System.out.print("CPF do hóspede a ser editado: ");
-        String cpf = sc.nextLine();
+        String cpf = gerenciamentoHotel.lerCpf();
 
         buscarHospedePorCpf(cpf).ifPresentOrElse(hospede -> {
             System.out.print("Novo nome (atual: " + hospede.getNome() + "): ");
             hospede.setNome(sc.nextLine());
 
-            System.out.print("Nova data de nascimento (atual: " + hospede.getDataNascimento() + "): ");
-            hospede.setDataNascimento(sc.nextLine());
+            System.out.println("Data de nascimento atual: " + hospede.getDataNascimento());
+            
+            hospede.setDataNascimento(gerenciamentoHotel.lerDataNascimento());
 
             System.out.print("Novo endereço (atual: " + hospede.getEndereco() + "): ");
             hospede.setEndereco(sc.nextLine());
@@ -86,8 +85,7 @@ public class GerenciamentoHospede implements Gerenciamento {
 
     @Override
     public void excluir() {
-        System.out.print("CPF do hóspede a ser excluído: ");
-        String cpf = sc.nextLine();
+        String cpf = gerenciamentoHotel.lerCpf();
 
         buscarHospedePorCpf(cpf).ifPresentOrElse(hospede -> {
             hospedes.remove(hospede);

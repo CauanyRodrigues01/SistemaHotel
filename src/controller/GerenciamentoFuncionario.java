@@ -12,10 +12,12 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 	private final List<Funcionario> funcionarios;
 	private final Scanner sc;
+	private final GerenciamentoHotel gerenciamentoHotel;
 
-	public GerenciamentoFuncionario(Scanner scanner) {
+	public GerenciamentoFuncionario(Scanner scanner, GerenciamentoHotel gerenciamentoHotel) {
 		this.funcionarios = new ArrayList<>();
 		this.sc = scanner;
+		this.gerenciamentoHotel = gerenciamentoHotel;
 	}
 
 	// Método auxiliar para buscar funcionario pelo CPF e retorná-lo
@@ -27,8 +29,8 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 	@Override
 	public void buscar() {
-	    System.out.print("Digite o CPF do Funcionário para buscar: ");
-	    String cpfBuscar = sc.nextLine();
+	    String cpfBuscar = gerenciamentoHotel.lerCpf();
+	    
 	    buscarFuncionarioPorCpf(cpfBuscar).ifPresentOrElse(
 	        funcionario -> System.out.println("Funcionário encontrado: " + funcionario),
 	        () -> System.out.println("Funcionário não encontrado.")
@@ -38,26 +40,23 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 	@Override
 	public void adicionar() {
 
-		System.out.println("---- Você escolheu a opção para cadastrar um novo funcionário ---");
-
 		System.out.println("Informe o nome do novo funcionário: ");
 		String nomeNovoFuncionario = sc.nextLine();
 
-		System.out.println("Informe o CPF: ");
-		String cpfNovoFuncionario = sc.nextLine();
+		String cpfNovoFuncionario = gerenciamentoHotel.lerCpf();
 
 		System.out.println("Informe o cargo: ");
 		String cargoNovoFuncionario = sc.nextLine();
 
 		System.out.println("Informe o salário por hora: ");
-		double salarioPorHoraNovoFuncionario = sc.nextDouble();
+		double salarioPorHoraNovoFuncionario = sc.nextDouble(); //TODO validar entrada
 		sc.nextLine();
 
 		System.out.println("Informe o turno de trabalho: ");
 		String turnoNovoFuncionario = sc.nextLine();
 
 		Funcionario novoFuncionario = new Funcionario(nomeNovoFuncionario, cpfNovoFuncionario, cargoNovoFuncionario,
-				salarioPorHoraNovoFuncionario, turnoNovoFuncionario, null);
+				salarioPorHoraNovoFuncionario, turnoNovoFuncionario, null);//TODO validar entrada
 
 		funcionarios.add(novoFuncionario);
 		System.out.println("Funcionário cadastrado com sucesso!");
@@ -65,8 +64,7 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 	@Override
 	public void editar() {
-	    System.out.print("Informe o CPF do funcionário que deseja editar: ");
-	    String cpfFuncionario = sc.nextLine();
+	    String cpfFuncionario = gerenciamentoHotel.lerCpf();
 
 	    buscarFuncionarioPorCpf(cpfFuncionario).ifPresentOrElse(funcionario -> {
 	        System.out.print("Novo nome do funcionário: ");
@@ -79,7 +77,7 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 	        funcionario.setCargo(sc.nextLine());
 
 	        System.out.print("Novo salário por hora: ");
-	        funcionario.setSalarioPorHora(sc.nextDouble());
+	        funcionario.setSalarioPorHora(sc.nextDouble());//TODO validar entrada
 	        sc.nextLine(); // Consumir nova linha
 
 	        System.out.print("Novo turno de trabalho: ");
@@ -91,8 +89,7 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 	@Override
 	public void excluir() {
-	    System.out.println("Informe o CPF do funcionário que deseja excluir: ");
-	    String cpfFuncionario = sc.nextLine();
+	    String cpfFuncionario = gerenciamentoHotel.lerCpf();
 	    buscarFuncionarioPorCpf(cpfFuncionario).ifPresentOrElse(funcionario -> 
 	    {
 	        System.out.println("Funcionário encontrado: " + funcionario);

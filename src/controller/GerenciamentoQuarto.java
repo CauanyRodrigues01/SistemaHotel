@@ -9,15 +9,16 @@ import java.util.Scanner;
 public class GerenciamentoQuarto implements Gerenciamento {
     private final ArrayList<Quarto> quartos;
     private final Scanner sc;
+    private final GerenciamentoHotel gerenciamentoHotel;
 
-    public GerenciamentoQuarto(Scanner scanner) {
+    public GerenciamentoQuarto(Scanner scanner, GerenciamentoHotel gerenciamentoHotel) {
         this.quartos = new ArrayList<>();
         this.sc = scanner;
+        this.gerenciamentoHotel = gerenciamentoHotel;
     }
 
     public void reservarQuarto() {
-        System.out.print("Digite o número do quarto: ");
-        int numQuarto = readInt();
+        int numQuarto = gerenciamentoHotel.lerId();
 
         Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
 
@@ -32,8 +33,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
     }
 
     public void liberarQuarto() {
-        System.out.print("Digite o número do quarto: ");
-        int numQuarto = readInt();
+        int numQuarto = gerenciamentoHotel.lerId();
 
         Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
 
@@ -56,7 +56,6 @@ public class GerenciamentoQuarto implements Gerenciamento {
                 encontrado = true;
             }
         }
-
         if (!encontrado) {
             System.out.println("Não há quartos disponíveis no momento.");
         }
@@ -69,17 +68,9 @@ public class GerenciamentoQuarto implements Gerenciamento {
                       .findFirst();
     }
     
-
-    private int readInt() {
-        int value = sc.nextInt();
-        sc.nextLine(); // Consumir nova linha
-        return value;
-    }
-    
     @Override
     public void buscar() {
-        System.out.print("Digite o número do quarto para buscar: ");
-        int numQuarto = sc.nextInt();
+        int numQuarto = gerenciamentoHotel.lerId();
         sc.nextLine(); // Consumir a nova linha
 
         buscarQuartoPorNumero(numQuarto).ifPresentOrElse(
@@ -90,17 +81,18 @@ public class GerenciamentoQuarto implements Gerenciamento {
     
     @Override
     public void adicionar() {
-        System.out.print("Número do quarto: ");
-        int numQuarto = readInt();
+        int numQuarto = gerenciamentoHotel.lerId();
+        sc.nextLine();
 
         System.out.print("Tipo do quarto (solteiro, casal, suíte): ");
         String tipo = sc.nextLine();
 
         System.out.print("Capacidade do quarto: ");
-        int capacidade = readInt();
+        int capacidade = gerenciamentoHotel.lerInt();
+        sc.nextLine(); // Consumir nova linha
 
         System.out.print("Preço da diária: ");
-        double precoDiaria = sc.nextDouble();
+        double precoDiaria = sc.nextDouble(); //TODO validar entrada de preco
         sc.nextLine(); // Consumir nova linha
 
         System.out.print("Status do quarto (disponível/indisponível): ");
@@ -114,17 +106,17 @@ public class GerenciamentoQuarto implements Gerenciamento {
 
     @Override
     public void editar() {
-        System.out.print("Informe o número do quarto que deseja editar: ");
-        int numQuarto = readInt();
+        int numQuarto = gerenciamentoHotel.lerId();
+        sc.nextLine(); // Consumir nova linha
 
         buscarQuartoPorNumero(numQuarto).ifPresentOrElse(quarto -> {
             System.out.print("Novo tipo de quarto: ");
             quarto.setTipo(sc.nextLine());
 
             System.out.print("Nova capacidade: ");
-            quarto.setCapacidade(readInt());
-
-            System.out.print("Novo preço da diária: ");
+            quarto.setCapacidade(gerenciamentoHotel.lerInt());
+            
+            System.out.print("Novo preço da diária: ");  //TODO validar entrada de preco
             quarto.setPrecoDiaria(sc.nextDouble());
             sc.nextLine(); // Consumir nova linha
 
@@ -138,7 +130,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
     @Override
     public void excluir() {
         System.out.print("Informe o número do quarto que deseja excluir: ");
-        int numQuarto = readInt(); // Aqui usamos `readInt` para leitura segura
+        int numQuarto = gerenciamentoHotel.lerInt();
 
         buscarQuartoPorNumero(numQuarto).ifPresentOrElse(quarto -> {
             quartos.remove(quarto);
