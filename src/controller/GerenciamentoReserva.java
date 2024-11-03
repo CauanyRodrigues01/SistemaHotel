@@ -2,7 +2,9 @@ package controller;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -22,38 +24,122 @@ public class GerenciamentoReserva implements Gerenciamento {
         this.sc = scanner;
     }
 
-    public void fazerCheckIn(Scanner sc) {
-        System.out.print("Digite o ID da Reserva: ");
-        int idReserva = sc.nextInt();
-        sc.nextLine(); // Consumir nova linha
+    public void fazerCheckIn() {
+        int idReserva = lerIdReserva();
 
         Optional<Reserva> optionalReserva = buscarReservaPorId(idReserva);
         if (optionalReserva.isPresent()) {
             Reserva reserva = optionalReserva.get();
-            reserva.getQuarto().setStatus("indisponível");
-            System.out.println("Check-In realizado com sucesso para a reserva com ID: " + reserva.getIdReserva());
+            Quarto quarto = reserva.getQuarto();
+
+            if (quarto.getStatus().equals("disponível")) {
+                quarto.setStatus("indisponível");
+                System.out.println("Check-In realizado com sucesso para a reserva com ID: " + reserva.getIdReserva());
+            } else {
+                System.out.println("Quarto está indisponível para check-in.");
+            }
         } else {
             System.out.println("Reserva não encontrada com o ID: " + idReserva);
         }
     }
 
-    public void fazerCheckOut(Scanner sc) {
-        System.out.print("Digite o ID da Reserva: ");
-        int idReserva = sc.nextInt();
-        sc.nextLine(); // Consumir nova linha
+    public void fazerCheckOut() {
+        int idReserva = lerIdReserva();
 
         Optional<Reserva> optionalReserva = buscarReservaPorId(idReserva);
         if (optionalReserva.isPresent()) {
             Reserva reserva = optionalReserva.get();
             Quarto quartoDaReserva = reserva.getQuarto();
-            quartoDaReserva.setStatus("disponível");
 
-            double valorTotal = reserva.calcularValorReserva(quartoDaReserva.getPrecoDiaria());
-            System.out.printf("Check-Out realizado com sucesso para a reserva com ID: %d.%n", idReserva);
-            System.out.printf("Valor total a ser pago: R$ %.2f%n", valorTotal);
-            reserva.setStatus("disponível");
+            if (quartoDaReserva.getStatus().equals("indisponível")) {
+                quartoDaReserva.setStatus("disponível");
+
+                double valorTotal = reserva.calcularValorReserva(quartoDaReserva.getPrecoDiaria());
+                System.out.printf("Check-Out realizado com sucesso para a reserva com ID: %d.%n", idReserva);
+                System.out.printf("Valor total a ser pago: R$ %.2f%n", valorTotal);
+            } else {
+                System.out.println("Quarto já está disponível para check-out.");
+            }
         } else {
             System.out.println("Reserva não encontrada com o ID: " + idReserva);
+        }
+    }
+    
+    private String lerCpf() {
+        while (true) {
+            System.out.print("Informe o CPF do Hóspede: ");
+            String cpf = sc.nextLine();
+            if (cpf.matches("\\d{11}")) {
+                return cpf; // CPF válido (apenas números e 11 dígitos)
+            } else {
+                System.out.println("CPF inválido. Certifique-se de que está no formato correto (11 dígitos).");
+            }
+        }
+    }
+
+    private int lerIdReserva() {
+        while (true) {
+            System.out.print("Digite o ID da Reserva: ");
+            try {
+                int id = sc.nextInt();
+                if (id <= 0) {
+                    System.out.println("\nDigite um valor maior que zero.\n");
+                } else {
+                    return id;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida. Por favor, insira um número inteiro para o ID da reserva.");
+            } finally {
+            	sc.nextLine(); // Limpar o buffer
+            }
+        }
+    }
+    
+    private int lerNumeroHospedes() {
+        while (true) {
+            System.out.print("Digite a quantidade de hóspedes (máximo 10): ");
+            try {
+                int numeroHospede = sc.nextInt();
+                if (numeroHospede <= 0 || numeroHospede > 10) {
+                    System.out.println("A quantidade de hóspedes deve ser entre 1 e 10.");
+                } else {
+                    return numeroHospede;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida. Por favor, insira um número inteiro.");
+            } finally {
+            	sc.nextLine(); // Limpar o buffer
+            }
+        }
+    }
+    
+    private LocalDate lerDataEntrada() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        while (true) {
+            System.out.print("Digite a data de entrada (dd/MM/yyyy): ");
+            try {
+                LocalDate dataEntrada = LocalDate.parse(sc.nextLine(), formatter);
+                return dataEntrada;
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato de data inválido. Tente novamente.");
+            }
+        }
+    }
+
+    private LocalDate lerDataSaida(LocalDate dataEntrada) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        while (true) {
+            System.out.print("Digite a data de saída (dd/MM/yyyy): ");
+            try {
+                LocalDate dataSaida = LocalDate.parse(sc.nextLine(), formatter);
+                if (dataSaida.isBefore(dataEntrada)) {
+                    System.out.println("A data de saída deve ser posterior à data de entrada.");
+                } else {
+                    return dataSaida;
+                }
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato de data inválido. Tente novamente.");
+            }
         }
     }
 
@@ -66,9 +152,7 @@ public class GerenciamentoReserva implements Gerenciamento {
     
 	@Override
 	public void buscar() {
-	    System.out.print("Digite o ID da reserva para buscar: ");
-	    int idReserva = sc.nextInt();
-	    sc.nextLine(); // Consumir a nova linha
+	    int idReserva = lerIdReserva();
 
 	    buscarReservaPorId(idReserva).ifPresentOrElse(
 	        reserva -> System.out.println("Reserva encontrada: " + reserva),
@@ -78,16 +162,12 @@ public class GerenciamentoReserva implements Gerenciamento {
 
     @Override
     public void adicionar() {
-    	
-    	Scanner sc = new Scanner(System.in);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        System.out.print("Informe o CPF do Hóspede: ");
-        String cpf = sc.nextLine();
+        String cpf = lerCpf();
 
         GerenciamentoHospede gerenciamentoHospede = new GerenciamentoHospede(sc);
         Optional<Hospede> hospedeOptional = gerenciamentoHospede.buscarHospedePorCpf(cpf);
-
+        
         if (hospedeOptional.isEmpty()) {
             System.out.println("Hóspede não encontrado. Certifique-se de que o hóspede está cadastrado.");
             return;
@@ -95,15 +175,11 @@ public class GerenciamentoReserva implements Gerenciamento {
 
         Hospede hospede = hospedeOptional.get();
 
-        System.out.print("Digite a quantidade de hóspedes: ");
-        int numeroHospede = sc.nextInt();
-        sc.nextLine(); // Consumir nova linha
+        int numeroHospede = lerNumeroHospedes();
 
-        System.out.print("Digite a data de entrada (dd/MM/yyyy): ");
-        LocalDate dataEntrada = LocalDate.parse(sc.nextLine(), formatter);
+        LocalDate dataEntrada = lerDataEntrada();
 
-        System.out.print("Digite a data de saída (dd/MM/yyyy): ");
-        LocalDate dataSaida = LocalDate.parse(sc.nextLine(), formatter);
+        LocalDate dataSaida = lerDataSaida(dataEntrada);
 
         System.out.print("Digite o número do Quarto: ");
         int numQuarto = sc.nextInt();
@@ -118,7 +194,7 @@ public class GerenciamentoReserva implements Gerenciamento {
 
         Quarto quarto = quartoOptional.get();
 
-        System.out.print("Informe o id da Reserva: ");
+        System.out.print("Informe o id da Reserva: "); //TODO fazer o id automatico
         Integer idReserva = sc.nextInt();
 
         Reserva reserva = new Reserva(numeroHospede, dataEntrada, dataSaida, quarto, hospede, idReserva);
@@ -130,17 +206,15 @@ public class GerenciamentoReserva implements Gerenciamento {
 
     @Override
     public void editar() {
-        System.out.print("Informe o ID da Reserva que deseja editar: ");
-        int idReserva = sc.nextInt();
-        sc.nextLine(); // Consumir nova linha
+    	int idReserva = lerIdReserva();
 
         buscarReservaPorId(idReserva).ifPresentOrElse(reserva -> {
             System.out.print("Digite a nova data de entrada (dd/MM/yyyy): ");
-            LocalDate novaDataEntrada = LocalDate.parse(sc.nextLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            
+            LocalDate novaDataEntrada = lerDataEntrada();
             reserva.setDataEntrada(novaDataEntrada);
-
-            System.out.print("Digite a nova data de saída (dd/MM/yyyy): ");
-            LocalDate novaDataSaida = LocalDate.parse(sc.nextLine(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            
+            LocalDate novaDataSaida = lerDataSaida(novaDataEntrada);
             reserva.setDataSaida(novaDataSaida);
 
             System.out.println("Reserva editada com sucesso!");
@@ -149,9 +223,7 @@ public class GerenciamentoReserva implements Gerenciamento {
 
     @Override
     public void excluir() {
-        System.out.print("Informe o ID da Reserva que deseja cancelar: ");
-        int idReserva = sc.nextInt();
-        sc.nextLine(); // Consumir a nova linha
+    	int idReserva = lerIdReserva();
 
         buscarReservaPorId(idReserva).ifPresentOrElse(reserva -> {
             reserva.getQuarto().setStatus("disponível");
@@ -181,8 +253,8 @@ public class GerenciamentoReserva implements Gerenciamento {
     @Override
     public void executarOpcaoEspecifica(int opcao, Scanner sc) {
         switch (opcao) {
-            case 6 -> fazerCheckIn(sc);
-            case 7 -> fazerCheckOut(sc);
+            case 6 -> fazerCheckIn();
+            case 7 -> fazerCheckOut();
             default -> System.out.println("Opção específica inválida");
         }
     }

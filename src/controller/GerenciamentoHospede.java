@@ -18,7 +18,7 @@ public class GerenciamentoHospede implements Gerenciamento {
         this.sc = scanner;
     }
     
-    // Método auxiliar para buscar hóspede pelo CPF e retorná-lo
+	// Método auxiliar para buscar hóspede pelo CPF e retorná-lo
     protected Optional<Hospede> buscarHospedePorCpf(String cpfBuscar) {
         return hospedes.stream()
                        .filter(h -> h.getCpf().equals(cpfBuscar))

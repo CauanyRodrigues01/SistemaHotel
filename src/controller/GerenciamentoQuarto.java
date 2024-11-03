@@ -159,18 +159,19 @@ public class GerenciamentoQuarto implements Gerenciamento {
     @Override
     public Map<Integer, String> getOpcoesEspecificas() {
         return Map.of(
-            8, "Reservar Quarto",
-            7, "Liberar Quarto",
-            6, "Listar Quartos Disponíveis"
+        	8, "Reservar Quarto",
+        	7, "Liberar Quarto",
+        	6, "Listar Quartos Disponíveis"
         );
     }
 
     @Override
     public void executarOpcaoEspecifica(int opcao, Scanner sc) {
         switch (opcao) {
-            case 8 -> reservarQuarto();
-            case 7 -> liberarQuarto();
-            case 6 -> listarQuartosDisponiveis();
+        	case 8 -> reservarQuarto();
+        	case 7 -> liberarQuarto();
+        	case 6 -> listarQuartosDisponiveis();
+            
             default -> System.out.println("Opção específica inválida");
         }
     }
