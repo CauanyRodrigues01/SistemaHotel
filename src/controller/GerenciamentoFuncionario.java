@@ -45,11 +45,10 @@ public class GerenciamentoFuncionario implements Gerenciamento {
             String turnoNovoFuncionario = sc.nextLine();
 
             Funcionario novoFuncionario = new Funcionario(nomeNovoFuncionario, cpfNovoFuncionario, cargoNovoFuncionario,
-                    salarioPorHoraNovoFuncionario, turnoNovoFuncionario, null);
+                    salarioPorHoraNovoFuncionario, turnoNovoFuncionario,null);
 
             funcionarios.add(novoFuncionario);
-
-            sc.close();
+            System.out.println("Funcionário cadastrado com sucesso!");
         }
 
         @Override
@@ -97,7 +96,6 @@ public class GerenciamentoFuncionario implements Gerenciamento {
                 System.out.println("CPF não encontrado.Certifique-se de que o funcionário está cadastrado.");
             }
 
-            sc.close();
         }
 
         @Override
@@ -135,7 +133,7 @@ public class GerenciamentoFuncionario implements Gerenciamento {
                 System.out.println("CPF não encontrado.Certifique-se de que o funcionário está cadastrado.");
             }
 
-            sc.close();
+
         }
 
         @Override
