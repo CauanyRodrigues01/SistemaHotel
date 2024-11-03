@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -30,6 +31,11 @@ public class GerenciamentoReserva implements Gerenciamento {
 	private Optional<Quarto> buscarQuarto(int numQuarto) {
 		return quartos.stream().filter(quarto -> quarto.getNumQuarto() == numQuarto).findFirst();
 	}
+	
+    // Sem métodos específicos, então retorna um mapa vazio
+    public Map<Integer, String> getOpcoesEspecificas() {
+        return Map.of();
+    }
 
 	@Override
 	public void adicionar() {

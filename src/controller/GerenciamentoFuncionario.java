@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import model.Funcionario;
@@ -15,8 +16,20 @@ public class GerenciamentoFuncionario implements Gerenciamento {
         this.funcionarios = new ArrayList<>();
     }
 
+
     @Override
     public void adicionar() {
+
+    // Sem métodos específicos, então retorna um mapa vazio
+    public Map<Integer, String> getOpcoesEspecificas() {
+        return Map.of();
+    }
+
+	@Override
+	public void adicionar() {
+		
+		Scanner sc = new Scanner(System.in);
+
 
         Scanner sc = new Scanner(System.in);
 
