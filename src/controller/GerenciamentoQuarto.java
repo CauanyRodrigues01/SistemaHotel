@@ -1,6 +1,5 @@
 package controller;
 
-import model.Hospede;
 import model.Quarto;
 import java.util.ArrayList;
 import java.util.Map;

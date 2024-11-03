@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 
-import model.Funcionario;
 import model.Hospede;
 import model.Quarto;
 import model.Reserva;
@@ -127,7 +126,7 @@ public class GerenciamentoReserva implements Gerenciamento {
 
     @Override
     public void editar() {
-    	Scanner sc = new Scanner(System.in);
+    	
         System.out.print("Informe o ID da Reserva que deseja editar: ");
         int idReserva = sc.nextInt();
         sc.nextLine(); // Consumir nova linha
@@ -152,7 +151,7 @@ public class GerenciamentoReserva implements Gerenciamento {
 
     @Override
     public void excluir() {
-    	Scanner sc = new Scanner(System.in);
+    	
         System.out.print("Informe o ID da Reserva que deseja cancelar: ");
         int idReserva = sc.nextInt();
         sc.nextLine(); // Consumir nova linha
