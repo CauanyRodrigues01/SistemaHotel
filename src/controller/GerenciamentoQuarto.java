@@ -2,6 +2,7 @@ package controller;
 
 import model.Quarto;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -13,6 +14,11 @@ public class GerenciamentoQuarto implements Gerenciamento {
         this.quartos = new ArrayList<>();
     }
 
+    // Sem métodos específicos, então retorna um mapa vazio
+    public Map<Integer, String> getOpcoesEspecificas() {
+        return Map.of();
+    }
+    
     @Override
     public void adicionar() {
     	
