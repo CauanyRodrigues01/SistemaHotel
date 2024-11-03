@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.Scanner;
 
 import model.Funcionario;
-import model.Hospede;
 
 public class GerenciamentoFuncionario implements Gerenciamento {
 
