@@ -60,6 +60,7 @@ public class Main {
 	        System.out.println(" 2) Editar ");
 	        System.out.println(" 3) Excluir ");
 	        System.out.println(" 4) Listar ");
+	        System.out.println(" 5) Buscar ");
 
 	        // Exibir opções específicas
 	        for (var opcaoEspecifica : gerenciamento.getOpcoesEspecificas().entrySet()) {
@@ -76,6 +77,7 @@ public class Main {
 	            case 2 -> gerenciamento.editar();
 	            case 3 -> gerenciamento.excluir();
 	            case 4 -> gerenciamento.listar();
+	            case 5 -> gerenciamento.buscar();
 	            case 0 -> { return; } // Volta para o menu principal
 	            default -> {
 	                if (gerenciamento.getOpcoesEspecificas().containsKey(opcao)) {

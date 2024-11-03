@@ -8,6 +8,7 @@ public interface Gerenciamento {
 	public void editar();
 	public void excluir();
 	public void listar();
+	public void buscar();
 	
     Map<Integer, String> getOpcoesEspecificas();
     void executarOpcaoEspecifica(int opcao, Scanner sc);

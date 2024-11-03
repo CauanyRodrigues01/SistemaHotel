@@ -18,11 +18,12 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 		this.sc = scanner;
 	}
 
-	public Optional<Funcionario> buscarFuncionarioPorCpf(String cpfBuscar) {
+	private Optional<Funcionario> buscarFuncionarioPorCpf(String cpfBuscar) {
 		return funcionarios.stream().filter(h -> h.getCpf().equals(cpfBuscar)).findFirst();
 	}
 
-	private void buscarFuncionario(Scanner sc) {
+	@Override
+	public void buscar() {
 		System.out.print("Digite o CPF do Funcionário para buscar: ");
 		String cpfBuscar = sc.nextLine(); // Usando o mesmo método para ler a entrada
 
@@ -31,19 +32,6 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 		System.out.println(funcionarioBuscado);
 
-	}
-
-	@Override
-	public Map<Integer, String> getOpcoesEspecificas() {
-		return Map.of(5, "Buscar Funcionário");
-	}
-
-	@Override
-	public void executarOpcaoEspecifica(int opcao, Scanner sc) {
-		switch (opcao) {
-		case 5 -> buscarFuncionario(sc);
-		default -> System.out.println("Opção específica inválida");
-		}
 	}
 
 	// Método para ler opções de forma segura
@@ -180,6 +168,18 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 			for (Funcionario funcionario : funcionarios) {
 				System.out.println(funcionario);
 			}
+		}
+	}
+
+	@Override
+	public Map<Integer, String> getOpcoesEspecificas() {
+		return Map.of();
+	}
+
+	@Override
+	public void executarOpcaoEspecifica(int opcao, Scanner sc) {
+		switch (opcao) {
+		default -> System.out.println("Opção específica inválida");
 		}
 	}
 }

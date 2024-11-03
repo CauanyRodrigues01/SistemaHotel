@@ -1,5 +1,6 @@
 package controller;
 
+import model.Hospede;
 import model.Quarto;
 import java.util.ArrayList;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
         System.out.print("Digite o número do quarto: ");
         int numQuarto = readInt();
 
-        Optional<Quarto> optionalQuarto = buscarQuarto(numQuarto);
+        Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
 
         if (optionalQuarto.isPresent() && optionalQuarto.get().isDisponivel()) {
             optionalQuarto.get().setStatus("indisponível");
@@ -35,7 +36,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
         System.out.print("Digite o número do quarto: ");
         int numQuarto = readInt();
 
-        Optional<Quarto> optionalQuarto = buscarQuarto(numQuarto);
+        Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
 
         if (optionalQuarto.isPresent() && !optionalQuarto.get().isDisponivel()) {
             optionalQuarto.get().setStatus("disponível");
@@ -62,27 +63,26 @@ public class GerenciamentoQuarto implements Gerenciamento {
         }
     }
 
-    public Optional<Quarto> buscarQuarto(int numQuarto) {
+    public Optional<Quarto> buscarQuartoPorNumero(int numQuarto) {
         return quartos.stream().filter(h -> h.getNumQuarto() == numQuarto).findFirst();
     }
+    
 
-    @Override
-    public Map<Integer, String> getOpcoesEspecificas() {
-        return Map.of(
-            5, "Reservar Quarto",
-            6, "Liberar Quarto",
-            7, "Listar Quartos Disponíveis"
-        );
+    private int readInt() {
+        int value = sc.nextInt();
+        sc.nextLine(); // Consumir nova linha
+        return value;
     }
-
+    
     @Override
-    public void executarOpcaoEspecifica(int opcao, Scanner sc) {
-        switch (opcao) {
-            case 5 -> reservarQuarto();
-            case 6 -> liberarQuarto();
-            case 7 -> listarQuartosDisponiveis();
-            default -> System.out.println("Opção específica inválida");
-        }
+    public void buscar() {
+        System.out.print("Digite o número do quarto para buscar: ");
+        int numQuarto = sc.nextInt(); // Usando o mesmo método para ler a entrada
+        
+        Optional<Quarto> quartoBuscado = quartos.stream().filter(h -> h.getNumQuarto() == (numQuarto)).findFirst();
+        
+        System.out.println(quartoBuscado);
+        
     }
 
     @Override
@@ -114,7 +114,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
         System.out.print("Informe o número do quarto que deseja editar: ");
         int numQuarto = readInt();
 
-        Optional<Quarto> optionalQuarto = buscarQuarto(numQuarto);
+        Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
 
         if (optionalQuarto.isPresent()) {
             Quarto quarto = optionalQuarto.get();
@@ -142,7 +142,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
         System.out.print("Informe o número do quarto que deseja excluir: ");
         int numQuarto = readInt();
 
-        Optional<Quarto> optionalQuarto = buscarQuarto(numQuarto);
+        Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
 
         if (optionalQuarto.isPresent()) {
             quartos.remove(optionalQuarto.get());
@@ -162,10 +162,23 @@ public class GerenciamentoQuarto implements Gerenciamento {
             }
         }
     }
+    
+    @Override
+    public Map<Integer, String> getOpcoesEspecificas() {
+        return Map.of(
+            8, "Reservar Quarto",
+            7, "Liberar Quarto",
+            6, "Listar Quartos Disponíveis"
+        );
+    }
 
-    private int readInt() {
-        int value = sc.nextInt();
-        sc.nextLine(); // Consumir nova linha
-        return value;
+    @Override
+    public void executarOpcaoEspecifica(int opcao, Scanner sc) {
+        switch (opcao) {
+            case 8 -> reservarQuarto();
+            case 7 -> liberarQuarto();
+            case 6 -> listarQuartosDisponiveis();
+            default -> System.out.println("Opção específica inválida");
+        }
     }
 }

@@ -18,11 +18,12 @@ public class GerenciamentoHospede implements Gerenciamento {
         this.sc = scanner;
     }
     
-    public Optional<Hospede> buscarPorCpf(String cpf) {
+    public Optional<Hospede> buscarHospedePorCpf(String cpf) {
         return hospedes.stream().filter(h -> h.getCpf().equals(cpf)).findFirst();
     }
     
-    private void buscarHospede(Scanner sc) {
+    @Override
+    public void buscar() {
         System.out.print("Digite o CPF do hóspede para buscar: ");
         String cpfBuscar = sc.nextLine(); // Usando o mesmo método para ler a entrada
         
@@ -31,40 +32,25 @@ public class GerenciamentoHospede implements Gerenciamento {
         System.out.println(hospedeBuscado);
         
     }
-    
-    @Override
-    public Map<Integer, String> getOpcoesEspecificas() {
-        return Map.of(5, "Buscar Hóspede");
-    }
-
-    @Override
-    public void executarOpcaoEspecifica(int opcao, Scanner sc) {
-        switch (opcao) {
-            case 5 -> buscarHospede(sc);
-            default -> System.out.println("Opção específica inválida");
-        }
-    }
 
     @Override
     public void adicionar() {
-    	
-        Scanner scanner = new Scanner(System.in);
         
         System.out.print("Nome do hóspede: ");
-        String nome = scanner.nextLine();
+        String nome = sc.nextLine();
 
         System.out.print("CPF do hóspede: ");
-        String cpf = scanner.nextLine();
+        String cpf = sc.nextLine();
 
         //TODO validar data
         System.out.print("Data de nascimento do hóspede (dd/mm/aaaa): ");
-        String dataNascimento = scanner.nextLine();
+        String dataNascimento = sc.nextLine();
 
         System.out.print("Endereço do hóspede: ");
-        String endereco = scanner.nextLine();
+        String endereco = sc.nextLine();
 
         System.out.print("Contato do hóspede: ");
-        String contato = scanner.nextLine();
+        String contato = sc.nextLine();
 
         Hospede novoHospede = new Hospede(nome, cpf, dataNascimento, endereco, contato);
         
@@ -76,10 +62,8 @@ public class GerenciamentoHospede implements Gerenciamento {
     @Override
     public void editar() {
     	
-        Scanner scanner = new Scanner(System.in);
-        
         System.out.print("CPF do hóspede a ser editado: ");
-        String cpf = scanner.nextLine();
+        String cpf = sc.nextLine();
 
         Optional<Hospede> hospedeExistente = hospedes.stream()
                 .filter(h -> h.getCpf().equals(cpf))
@@ -89,16 +73,16 @@ public class GerenciamentoHospede implements Gerenciamento {
             Hospede hospede = hospedeExistente.get();
             
             System.out.print("Novo nome (atual: " + hospede.getNome() + "): ");
-            hospede.setNome(scanner.nextLine());
+            hospede.setNome(sc.nextLine());
 
             System.out.print("Nova data de nascimento (atual: " + hospede.getDataNascimento() + "): ");
-            hospede.setDataNascimento(scanner.nextLine());
+            hospede.setDataNascimento(sc.nextLine());
 
             System.out.print("Novo endereço (atual: " + hospede.getEndereco() + "): ");
-            hospede.setEndereco(scanner.nextLine());
+            hospede.setEndereco(sc.nextLine());
 
             System.out.print("Novo contato (atual: " + hospede.getContato() + "): ");
-            hospede.setContato(scanner.nextLine());
+            hospede.setContato(sc.nextLine());
 
             System.out.println("Hóspede editado com sucesso!");
         } else {
@@ -109,10 +93,8 @@ public class GerenciamentoHospede implements Gerenciamento {
     @Override
     public void excluir() {
     	
-        Scanner scanner = new Scanner(System.in);
-        
         System.out.print("CPF do hóspede a ser excluído: ");
-        String cpf = scanner.nextLine();
+        String cpf = sc.nextLine();
 
         boolean removed = hospedes.removeIf(h -> h.getCpf().equals(cpf));
         
@@ -132,6 +114,18 @@ public class GerenciamentoHospede implements Gerenciamento {
             for (Hospede hospede : hospedes) {
                 System.out.println(hospede);
             }
+        }
+    }
+    
+    @Override
+    public Map<Integer, String> getOpcoesEspecificas() {
+        return Map.of();
+    }
+
+    @Override
+    public void executarOpcaoEspecifica(int opcao, Scanner sc) {
+        switch (opcao) {
+            default -> System.out.println("Opção específica inválida");
         }
     }
 }

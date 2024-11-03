@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 
+import model.Funcionario;
 import model.Hospede;
 import model.Quarto;
 import model.Reserva;
@@ -60,23 +61,17 @@ public class GerenciamentoReserva implements Gerenciamento {
     private Optional<Reserva> buscarReservaPorId(int idReserva) {
         return reservas.stream().filter(reserva -> reserva.getIdReserva() == idReserva).findFirst();
     }
+    
+	@Override
+	public void buscar() {
+		System.out.print("Digite o ID da reserva para buscar: ");
+		int idReserva = sc.nextInt(); // Usando o mesmo método para ler a entrada
 
-    @Override
-    public Map<Integer, String> getOpcoesEspecificas() {
-        return Map.of(
-            5, "Fazer Check-in",
-            6, "Fazer Check-out"
-        );
-    }
+		Optional<Reserva> reservaBuscado = reservas.stream().filter(h -> h.getIdReserva() == (idReserva)).findFirst();
 
-    @Override
-    public void executarOpcaoEspecifica(int opcao, Scanner sc) {
-        switch (opcao) {
-            case 5 -> fazerCheckIn(sc);
-            case 6 -> fazerCheckOut(sc);
-            default -> System.out.println("Opção específica inválida");
-        }
-    }
+		System.out.println(reservaBuscado);
+
+	}
 
     @Override
     public void adicionar() {
@@ -88,7 +83,7 @@ public class GerenciamentoReserva implements Gerenciamento {
         String cpf = sc.nextLine();
 
         GerenciamentoHospede gerenciamentoHospede = new GerenciamentoHospede(sc);
-        Optional<Hospede> hospedeOptional = gerenciamentoHospede.buscarPorCpf(cpf);
+        Optional<Hospede> hospedeOptional = gerenciamentoHospede.buscarHospedePorCpf(cpf);
 
         if (hospedeOptional.isEmpty()) {
             System.out.println("Hóspede não encontrado. Certifique-se de que o hóspede está cadastrado.");
@@ -111,7 +106,7 @@ public class GerenciamentoReserva implements Gerenciamento {
         int numQuarto = sc.nextInt();
 
         GerenciamentoQuarto gerenciamentoQuarto = new GerenciamentoQuarto(sc);
-        Optional<Quarto> quartoOptional = gerenciamentoQuarto.buscarQuarto(numQuarto);
+        Optional<Quarto> quartoOptional = gerenciamentoQuarto.buscarQuartoPorNumero(numQuarto);
 
         if (quartoOptional.isEmpty()) {
             System.out.println("Quarto não encontrado. Certifique-se de que o quarto está cadastrado.");
@@ -180,6 +175,23 @@ public class GerenciamentoReserva implements Gerenciamento {
             System.out.println("Não há reservas cadastradas.");
         } else {
             reservas.forEach(System.out::println);
+        }
+    }
+    
+    @Override
+    public Map<Integer, String> getOpcoesEspecificas() {
+        return Map.of(
+            6, "Fazer Check-in",
+            7, "Fazer Check-out"
+        );
+    }
+
+    @Override
+    public void executarOpcaoEspecifica(int opcao, Scanner sc) {
+        switch (opcao) {
+            case 6 -> fazerCheckIn(sc);
+            case 7 -> fazerCheckOut(sc);
+            default -> System.out.println("Opção específica inválida");
         }
     }
 }
