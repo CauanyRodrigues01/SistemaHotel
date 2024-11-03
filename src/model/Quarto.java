@@ -16,6 +16,10 @@ public class Quarto {
         this.status = status;
     }
     
+    public boolean isDisponivel() {
+        return status.equalsIgnoreCase("disponível");
+    }
+    
     // Getters e Setters
     public int getNumQuarto() {
         return numQuarto;
