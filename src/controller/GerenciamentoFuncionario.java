@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Scanner;
 
 import model.Funcionario;
+import model.Hospede;
 
 public class GerenciamentoFuncionario implements Gerenciamento {
 
@@ -17,36 +18,37 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 		this.funcionarios = new ArrayList<>();
 		this.sc = scanner;
 	}
-    
-    public Optional<Funcionario> buscarFuncionarioPorCpf(String cpfBuscar) {
-        return funcionarios.stream().filter(h -> h.getCpf().equals(cpfBuscar)).findFirst();
-    }
-    
-    private void buscarFuncionario(Scanner sc) {
-        System.out.print("Digite o CPF do Funcionário para buscar: ");
-        String cpfBuscar = sc.nextLine(); // Usando o mesmo método para ler a entrada
-        
-        Optional<Funcionario> funcionarioBuscado = funcionarios.stream().filter(h -> h.getCpf().equals(cpfBuscar)).findFirst();
-        
-        System.out.println(funcionarioBuscado);
-        
-    }
-    
-    @Override
-    public Map<Integer, String> getOpcoesEspecificas() {
-        return Map.of(5, "Buscar Funcionário");
-    }
 
-    @Override
-    public void executarOpcaoEspecifica(int opcao, Scanner sc) {
-        switch (opcao) {
-            case 5 -> buscarFuncionario(sc);
-            default -> System.out.println("Opção específica inválida");
-        }
-    }
-    
-    // Método para ler opções de forma segura
-    private int lerOpcao(Scanner sc) {
+	public Optional<Funcionario> buscarFuncionarioPorCpf(String cpfBuscar) {
+		return funcionarios.stream().filter(h -> h.getCpf().equals(cpfBuscar)).findFirst();
+	}
+
+	private void buscarFuncionario(Scanner sc) {
+		System.out.print("Digite o CPF do Funcionário para buscar: ");
+		String cpfBuscar = sc.nextLine(); // Usando o mesmo método para ler a entrada
+
+		Optional<Funcionario> funcionarioBuscado = funcionarios.stream().filter(h -> h.getCpf().equals(cpfBuscar))
+				.findFirst();
+
+		System.out.println(funcionarioBuscado);
+
+	}
+
+	@Override
+	public Map<Integer, String> getOpcoesEspecificas() {
+		return Map.of(5, "Buscar Funcionário");
+	}
+
+	@Override
+	public void executarOpcaoEspecifica(int opcao, Scanner sc) {
+		switch (opcao) {
+		case 5 -> buscarFuncionario(sc);
+		default -> System.out.println("Opção específica inválida");
+		}
+	}
+
+	// Método para ler opções de forma segura
+	private int lerOpcao(Scanner sc) {
         while (true) {
             try {
                 return Integer.parseInt(sc.nextLine());
@@ -54,11 +56,11 @@ public class GerenciamentoFuncionario implements Gerenciamento {
                 System.out.print("Entrada inválida. Por favor, insira um número: ");
             }
         }
-    }
+	}
 
 	@Override
 	public void adicionar() {
-		
+
 		Scanner sc = new Scanner(System.in);
 
 		System.out.println("---- Você escolheu a opção para cadastrar um novo funcionário ---");
@@ -81,15 +83,14 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 		Funcionario novoFuncionario = new Funcionario(nomeNovoFuncionario, cpfNovoFuncionario, cargoNovoFuncionario,
 				salarioPorHoraNovoFuncionario, turnoNovoFuncionario, null);
-		
+
 		funcionarios.add(novoFuncionario);
-		
-		sc.close();
+		System.out.println("Funcionário cadastrado com sucesso!");
 	}
 
 	@Override
 	public void editar() {
-		
+
 		Scanner sc = new Scanner(System.in);
 		System.out.println("---- Você escolheu a opção para editar os dados de um funcionário ---");
 		System.out.println("Informe o CPF do funcionario que deseja editar as informações: ");
@@ -132,12 +133,11 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 			System.out.println("CPF não encontrado.Certifique-se de que o funcionário está cadastrado.");
 		}
 
-		sc.close();
 	}
 
 	@Override
 	public void excluir() {
-		
+
 		Scanner sc = new Scanner(System.in);
 		System.out.println("---- Você escolheu a opção para excluir um funcionário ---");
 		System.out.println("Informe o CPF do funcionario que deseja excluir: ");
@@ -170,13 +170,17 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 			System.out.println("CPF não encontrado.Certifique-se de que o funcionário está cadastrado.");
 		}
 
-		sc.close();
 	}
 
 	@Override
 	public void listar() {
-		// TODO Auto-generated method stub
-
+		if (funcionarios.isEmpty()) {
+			System.out.println("Não existem funcionários cadastrados.");
+		} else {
+			System.out.println("Lista com os funcionários cadastrados:");
+			for (Funcionario funcionario : funcionarios) {
+				System.out.println(funcionario);
+			}
+		}
 	}
-
 }
