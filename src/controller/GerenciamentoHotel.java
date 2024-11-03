@@ -6,7 +6,11 @@ import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
+
+import model.Hospede;
+import model.Quarto;
 
 public class GerenciamentoHotel {
 	private Scanner sc;
@@ -45,9 +49,9 @@ public class GerenciamentoHotel {
         }
     }
 
-    int lerId() {
+    int lerIdReserva() {
         while (true) {
-            System.out.print("Digite o identificador: ");
+            System.out.print("Digite o ID da Reserva: ");
             try {
                 int id = sc.nextInt();
                 if (id <= 0) {
@@ -58,6 +62,23 @@ public class GerenciamentoHotel {
             } catch (InputMismatchException e) {
                 System.out.println("Entrada inválida. Por favor, insira um número inteiro.");
             } 
+        }
+    }
+    
+    int lerNumQuarto() {
+        while (true) {
+            System.out.print("Digite o número do Quarto: ");
+            try {
+                int id = sc.nextInt();
+                if (id <= 0) {
+                    System.out.println("\nDigite um valor maior que zero.\n");
+                } else {
+                    return id;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida. Por favor, insira um número inteiro.");
+                sc.nextLine(); // Limpar o buffer
+            }
         }
     }
     
@@ -96,7 +117,14 @@ public class GerenciamentoHotel {
             System.out.print("Digite a data de entrada (dd/MM/yyyy): ");
             try {
                 LocalDate dataEntrada = LocalDate.parse(sc.nextLine(), formatter);
-                return dataEntrada;
+                
+                // Verifica se a data de entrada é hoje ou posterior a hoje
+                if (dataEntrada.isBefore(LocalDate.now())) {
+                    System.out.println("A data de entrada não pode ser anterior a hoje. Tente novamente.");
+                } else {
+                    return dataEntrada;
+                }
+                
             } catch (DateTimeParseException e) {
                 System.out.println("Formato de data inválido. Tente novamente.");
             }
@@ -136,6 +164,16 @@ public class GerenciamentoHotel {
                 System.out.println("Formato de data inválido. Tente novamente.");
             }
         }
+    }
+    
+    public Optional<Hospede> buscarHospedePorCpf(String cpf) {
+        GerenciamentoHospede gerenciamentoHospede = (GerenciamentoHospede) gerenciamentos.get(1);
+        return gerenciamentoHospede.buscarHospedePorCpf(cpf);
+    }
+
+    public Optional<Quarto> buscarQuartoPorNumero(int numeroQuarto) {
+        GerenciamentoQuarto gerenciamentoQuarto = (GerenciamentoQuarto) gerenciamentos.get(3);
+        return gerenciamentoQuarto.buscarQuartoPorNumero(numeroQuarto);
     }
 
 	public void exibirMenuPrincipal() {

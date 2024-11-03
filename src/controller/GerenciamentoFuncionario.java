@@ -26,6 +26,15 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 	                       .filter(h -> h.getCpf().equals(cpfBuscar))
 	                       .findFirst();
 	}
+	
+	public void registrarHoras() { //TODO fazer
+		//funcionario.registrarHoras(int horas);
+	}
+	
+	public void calcularSalario() { //TODO fazer
+		//double salario = funcionario.calcularSalario();
+		//System.out.println(salario);
+	}
 
 	@Override
 	public void buscar() {

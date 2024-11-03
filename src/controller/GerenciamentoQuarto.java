@@ -17,8 +17,8 @@ public class GerenciamentoQuarto implements Gerenciamento {
         this.gerenciamentoHotel = gerenciamentoHotel;
     }
 
-    public void reservarQuarto() {
-        int numQuarto = gerenciamentoHotel.lerId();
+    public void reservarQuarto() { //TODO não acessível para o usuario
+        int numQuarto = gerenciamentoHotel.lerNumQuarto();
 
         Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
 
@@ -32,8 +32,8 @@ public class GerenciamentoQuarto implements Gerenciamento {
         }
     }
 
-    public void liberarQuarto() {
-        int numQuarto = gerenciamentoHotel.lerId();
+    public void liberarQuarto() {//TODO não acessível para o usuario
+        int numQuarto = gerenciamentoHotel.lerNumQuarto();
 
         Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
 
@@ -70,7 +70,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
     
     @Override
     public void buscar() {
-        int numQuarto = gerenciamentoHotel.lerId();
+        int numQuarto = gerenciamentoHotel.lerNumQuarto();
         sc.nextLine(); // Consumir a nova linha
 
         buscarQuartoPorNumero(numQuarto).ifPresentOrElse(
@@ -81,7 +81,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
     
     @Override
     public void adicionar() {
-        int numQuarto = gerenciamentoHotel.lerId();
+        int numQuarto = gerenciamentoHotel.lerNumQuarto();
         sc.nextLine();
 
         System.out.print("Tipo do quarto (solteiro, casal, suíte): ");
@@ -95,10 +95,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
         double precoDiaria = sc.nextDouble(); //TODO validar entrada de preco
         sc.nextLine(); // Consumir nova linha
 
-        System.out.print("Status do quarto (disponível/indisponível): ");
-        String status = sc.nextLine();
-
-        Quarto novoQuarto = new Quarto(numQuarto, tipo, capacidade, precoDiaria, status);
+        Quarto novoQuarto = new Quarto(numQuarto, tipo, capacidade, precoDiaria, "Disponível");
         quartos.add(novoQuarto);
 
         System.out.println("Quarto adicionado com sucesso!");
@@ -106,7 +103,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
 
     @Override
     public void editar() {
-        int numQuarto = gerenciamentoHotel.lerId();
+        int numQuarto = gerenciamentoHotel.lerNumQuarto();
         sc.nextLine(); // Consumir nova linha
 
         buscarQuartoPorNumero(numQuarto).ifPresentOrElse(quarto -> {
@@ -151,8 +148,6 @@ public class GerenciamentoQuarto implements Gerenciamento {
     @Override
     public Map<Integer, String> getOpcoesEspecificas() {
         return Map.of(
-        	8, "Reservar Quarto",
-        	7, "Liberar Quarto",
         	6, "Listar Quartos Disponíveis"
         );
     }
@@ -160,8 +155,6 @@ public class GerenciamentoQuarto implements Gerenciamento {
     @Override
     public void executarOpcaoEspecifica(int opcao, Scanner sc) {
         switch (opcao) {
-        	case 8 -> reservarQuarto();
-        	case 7 -> liberarQuarto();
         	case 6 -> listarQuartosDisponiveis();
             
             default -> System.out.println("Opção específica inválida");
