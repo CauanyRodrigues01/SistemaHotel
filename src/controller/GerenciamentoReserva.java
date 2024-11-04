@@ -105,18 +105,20 @@ public class GerenciamentoReserva implements Gerenciamento {
 	        }
 	    }
 
-	    int numeroHospede = this.gerenciamentoHotel.lerNumeroHospedes();
-	    LocalDate dataEntrada = this.gerenciamentoHotel.lerDataEntrada();
-	    LocalDate dataSaida = this.gerenciamentoHotel.lerDataSaida(dataEntrada);
-
 	    Quarto quarto = null;
 	    while (true) {
 	        int numQuarto = gerenciamentoHotel.lerNumQuarto();
 	        Optional<Quarto> quartoOptional = this.gerenciamentoHotel.buscarQuartoPorNumero(numQuarto);
 
 	        if (quartoOptional.isPresent()) {
-	            quarto = quartoOptional.get();
-	            break; 
+	        	
+	        	boolean reservaQuarto = this.gerenciamentoHotel.reservarQuarto(numQuarto);
+	        	
+	        	if (reservaQuarto) {
+	        		quarto = quartoOptional.get();
+		            break;
+	        	} 	        	
+	             
 	        } else {
 	        	sc.nextLine();
 	            System.out.println("Quarto não encontrado. Certifique-se de que o quarto está cadastrado.");
@@ -132,11 +134,15 @@ public class GerenciamentoReserva implements Gerenciamento {
 	            }
 	        }
 	    }
+	    
+	    int numeroHospedes = this.gerenciamentoHotel.lerNumeroHospedes();
+	    LocalDate dataEntrada = this.gerenciamentoHotel.lerDataEntrada();
+	    LocalDate dataSaida = this.gerenciamentoHotel.lerDataSaida(dataEntrada);
 
-	    Reserva reserva = new Reserva(numeroHospede, dataEntrada, dataSaida, quarto, hospede);
+	    Reserva reserva = new Reserva(numeroHospedes, dataEntrada, dataSaida, quarto, hospede);
 	    hospede.adicionarReserva(reserva);
 	    reservas.add(reserva);
-
+	    //TODO adicionar reserva no hospede
 	    System.out.println("Sua reserva foi realizada com sucesso! Obrigada pela preferência.");
 	}
 

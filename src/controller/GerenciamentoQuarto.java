@@ -17,18 +17,22 @@ public class GerenciamentoQuarto implements Gerenciamento {
         this.gerenciamentoHotel = gerenciamentoHotel;
     }
 
-    public void reservarQuarto() { //TODO não acessível para o usuario
-        int numQuarto = gerenciamentoHotel.lerNumQuarto();
+    public boolean reservarQuarto(int numQuarto) {
 
         Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
 
-        if (optionalQuarto.isPresent() && optionalQuarto.get().isDisponivel()) {
-            optionalQuarto.get().setStatus("indisponível");
-            System.out.println("Quarto " + numQuarto + " reservado com sucesso!");
-        } else if (optionalQuarto.isPresent()) {
-            System.out.println("Quarto não disponível para reserva.");
+        if (optionalQuarto.isPresent()) {
+        	if (optionalQuarto.get().isDisponivel()) {
+        		optionalQuarto.get().setStatus("indisponível");
+                System.out.println("Quarto " + numQuarto + " reservado com sucesso!");
+                return true;
+        	} else {
+        		System.out.println("Quarto não disponível para reserva.");
+        		return false;
+        	}
         } else {
             System.out.println("Quarto não encontrado.");
+            return false;
         }
     }
 

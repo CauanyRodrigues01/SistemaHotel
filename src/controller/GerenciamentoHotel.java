@@ -166,6 +166,11 @@ public class GerenciamentoHotel {
         }
     }
     
+    public boolean reservarQuarto(int numQuarto) {
+    	GerenciamentoQuarto gerenciamentoQuarto = (GerenciamentoQuarto) gerenciamentos.get(3);
+    	return gerenciamentoQuarto.reservarQuarto(numQuarto);
+    }
+    
     public Optional<Hospede> buscarHospedePorCpf(String cpf) {
         GerenciamentoHospede gerenciamentoHospede = (GerenciamentoHospede) gerenciamentos.get(1);
         return gerenciamentoHospede.buscarHospedePorCpf(cpf);
@@ -242,11 +247,4 @@ public class GerenciamentoHotel {
 			}
 		}
 	}
-
-	// public void adicionarReserva(Reserva reserva) {
-	// Verificações de consistência e lógica de adição de reserva
-	// Poderia envolver chamadas para gerenciamentoHospede e gerenciamentoQuarto
-	// }
-
-	// Outros métodos para gerenciar operações do hotel...
 }
