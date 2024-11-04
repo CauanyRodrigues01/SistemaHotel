@@ -7,7 +7,7 @@ public class Quarto {
     private String tipo;
     private int capacidade;
     private double precoDiaria;
-    private String status;
+    private String status; //TODO usar enum
 
     public Quarto(String tipo, int capacidade, double precoDiaria, String status) {
         this.numQuarto = contador++;

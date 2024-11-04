@@ -11,7 +11,7 @@ public class Reserva {
 	private int numeroHospede;
 	private Quarto quarto;
 	private Hospede hospede;
-	private String status;
+	private String status; //TODO usar enum
 	
 	public Reserva(int numeroHospede, LocalDate dataEntrada, LocalDate dataSaida, Quarto quarto, Hospede hospede) {
 		this.numeroHospede = numeroHospede;
