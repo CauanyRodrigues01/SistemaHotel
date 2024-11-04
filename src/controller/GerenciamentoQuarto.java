@@ -1,6 +1,8 @@
 package controller;
 
 import model.Quarto;
+import model.StatusQuarto;
+
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +25,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
 
         if (optionalQuarto.isPresent()) {
         	if (optionalQuarto.get().isDisponivel()) {
-        		optionalQuarto.get().setStatus("Reservado");
+        		optionalQuarto.get().setStatus(StatusQuarto.RESERVADO);
                 System.out.println("Quarto " + numQuarto + " reservado com sucesso!");
                 return true;
         	} else {
@@ -42,7 +44,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
         Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
 
         if (optionalQuarto.isPresent() && !optionalQuarto.get().isDisponivel()) {
-            optionalQuarto.get().setStatus("disponível");
+            optionalQuarto.get().setStatus(StatusQuarto.DISPONIVEL);
             System.out.println("Quarto " + numQuarto + " liberado com sucesso!");
         } else if (optionalQuarto.isPresent()) {
             System.out.println("Quarto já está disponível.");
@@ -96,7 +98,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
         double precoDiaria = sc.nextDouble(); //TODO validar entrada de preco
         sc.nextLine(); // Consumir nova linha
 
-        Quarto novoQuarto = new Quarto(tipo, capacidade, precoDiaria, "Disponível");
+        Quarto novoQuarto = new Quarto(tipo, capacidade, precoDiaria, StatusQuarto.DISPONIVEL);
         quartos.add(novoQuarto);
 
         System.out.println("Quarto adicionado com sucesso!");
@@ -108,7 +110,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
         sc.nextLine(); // Consumir nova linha
 
         buscarQuartoPorNumero(numQuarto).ifPresentOrElse(quarto -> {
-            System.out.print("Novo tipo de quarto: ");
+            System.out.print("Novo tipo do quarto: ");
             quarto.setTipo(sc.nextLine());
 
             System.out.print("Nova capacidade: ");
@@ -117,9 +119,6 @@ public class GerenciamentoQuarto implements Gerenciamento {
             System.out.print("Novo preço da diária: ");  //TODO validar entrada de preco
             quarto.setPrecoDiaria(sc.nextDouble());
             sc.nextLine(); // Consumir nova linha
-
-            System.out.print("Novo status (disponível/indisponível): ");
-            quarto.setStatus(sc.nextLine());
 
             System.out.println("Quarto atualizado com sucesso!");
         }, () -> System.out.println("Quarto não encontrado."));

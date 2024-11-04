@@ -10,6 +10,7 @@ import java.util.Scanner;
 import model.Hospede;
 import model.Quarto;
 import model.Reserva;
+import model.StatusQuarto;
 
 public class GerenciamentoReserva implements Gerenciamento {
 
@@ -33,7 +34,7 @@ public class GerenciamentoReserva implements Gerenciamento {
             Quarto quarto = reserva.getQuarto();
 
             if (quarto.getStatus().equals("Reservado")) {
-                quarto.setStatus("Usando");
+                quarto.setStatus(StatusQuarto.OCUPADO);
                 System.out.println("Check-In realizado com sucesso para a reserva com ID " + reserva.getIdReserva());
             } else {
                 System.out.println("Já foi feito check-in npara essa Reserva.");
@@ -56,7 +57,7 @@ public class GerenciamentoReserva implements Gerenciamento {
             	double valorTotal = reserva.calcularValorReserva(quartoDaReserva.getPrecoDiaria());
                 System.out.printf("Check-Out realizado com sucesso para a reserva com ID ", idReserva);
                 System.out.printf("Valor total a ser pago: R$ %.2f", valorTotal);
-                quartoDaReserva.setStatus("Disponível");
+                quartoDaReserva.setStatus(StatusQuarto.DISPONIVEL);
             } else {
                 System.out.println("Quarto não está sendo usado, isso quer dizer que não foi feito check-in, então não é possível fazer check-out.");
             }
@@ -170,7 +171,7 @@ public class GerenciamentoReserva implements Gerenciamento {
     	int idReserva = this.gerenciamentoHotel.lerIdReserva();
 
         buscarReservaPorId(idReserva).ifPresentOrElse(reserva -> {
-            reserva.getQuarto().setStatus("disponível");
+            reserva.getQuarto().setStatus(StatusQuarto.DISPONIVEL);
             reservas.remove(reserva);
             System.out.println("Reserva cancelada com sucesso!");
         }, () -> System.out.println("Reserva não encontrada com o ID: " + idReserva));

@@ -7,9 +7,9 @@ public class Quarto {
     private String tipo;
     private int capacidade;
     private double precoDiaria;
-    private String status; //TODO usar enum
+    private StatusQuarto status;
 
-    public Quarto(String tipo, int capacidade, double precoDiaria, String status) {
+    public Quarto(String tipo, int capacidade, double precoDiaria, StatusQuarto status) {
         this.numQuarto = contador++;
         this.tipo = tipo;
         this.capacidade = capacidade;
@@ -18,7 +18,7 @@ public class Quarto {
     }
     
     public boolean isDisponivel() {
-        return status.equalsIgnoreCase("disponível");
+        return status == StatusQuarto.DISPONIVEL;
     }
     
     // Getters e Setters
@@ -54,11 +54,11 @@ public class Quarto {
         this.precoDiaria = precoDiaria;
     }
 
-    public String getStatus() {
+    public StatusQuarto getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusQuarto status) {
         this.status = status;
     }
 
