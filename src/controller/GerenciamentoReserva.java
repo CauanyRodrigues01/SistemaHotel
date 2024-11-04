@@ -76,34 +76,6 @@ public class GerenciamentoReserva implements Gerenciamento {
                        .findFirst();
     }
     
-    private Hospede obterHospedeValido() {
-        while (true) {
-            String cpf = gerenciamentoHotel.lerCpf();
-            Optional<Hospede> hospedeOptional = gerenciamentoHotel.buscarHospedePorCpf(cpf);
-            if (hospedeOptional.isPresent()) return hospedeOptional.get();
-
-            System.out.println("Hóspede não encontrado. Deseja tentar novamente? (S/N): ");
-            if (!continuarOperacao()) return null;
-        }
-    }
-
-    private Quarto obterQuartoValidoParaReserva() {
-        while (true) {
-            int numQuarto = gerenciamentoHotel.lerNumQuarto();
-            if (gerenciamentoHotel.reservarQuarto(numQuarto)) {
-                return gerenciamentoHotel.buscarQuartoPorNumero(numQuarto).orElse(null);
-            }
-            System.out.print("Deseja tentar novamente? (S/N): ");
-            sc.nextLine();
-            if (!continuarOperacao()) return null;
-        }
-    }
-
-    private boolean continuarOperacao() {
-        String opcao = sc.nextLine().trim().toUpperCase();
-        return "S".equals(opcao);
-    }
-    
 	@Override
 	public void buscar() {
 	    int idReserva = this.gerenciamentoHotel.lerIdReserva();
@@ -116,12 +88,12 @@ public class GerenciamentoReserva implements Gerenciamento {
 
 	@Override
 	public void adicionar() {
-	    Hospede hospede = obterHospedeValido();
+	    Hospede hospede = gerenciamentoHotel.obterHospedeValido();
 	    if (hospede == null) return;
 	    
 	    int numeroHospedes = gerenciamentoHotel.lerNumeroHospedes();
 
-	    Quarto quarto = obterQuartoValidoParaReserva();
+	    Quarto quarto = gerenciamentoHotel.obterQuartoValidoParaReserva();
 	    if (quarto == null) return;
 
 	    LocalDate dataEntrada = gerenciamentoHotel.lerDataEntrada();

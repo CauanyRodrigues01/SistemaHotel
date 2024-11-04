@@ -59,6 +59,34 @@ public class GerenciamentoHotel {
         GerenciamentoQuarto gerenciamentoQuarto = (GerenciamentoQuarto) gerenciamentos.get(3);
         return gerenciamentoQuarto.buscarQuartoPorNumero(numeroQuarto);
     }
+    
+    Hospede obterHospedeValido() { //TODO criar exception
+        while (true) {
+            String cpf = lerCpf();
+            Optional<Hospede> hospedeOptional = buscarHospedePorCpf(cpf);
+            if (hospedeOptional.isPresent()) return hospedeOptional.get();
+
+            System.out.println("Hóspede não encontrado. Deseja tentar novamente? (S/N): ");
+            if (!continuarOperacao()) return null;
+        }
+    }
+
+    Quarto obterQuartoValidoParaReserva() { //TODO criar exception
+        while (true) {
+            int numQuarto = lerNumQuarto();
+            if (reservarQuarto(numQuarto)) {
+                return buscarQuartoPorNumero(numQuarto).orElse(null);
+            }
+            System.out.print("Deseja tentar novamente? (S/N): ");
+            sc.nextLine();
+            if (!continuarOperacao()) return null;
+        }
+    }
+
+    private boolean continuarOperacao() {
+        String opcao = sc.nextLine().trim().toUpperCase();
+        return "S".equals(opcao);
+    }
 
 
 	int lerOpcaoMenu(Scanner sc) {
@@ -71,7 +99,7 @@ public class GerenciamentoHotel {
 		}
 	}
 	
-    String lerCpf() {
+    String lerCpf() { //TODO criar exception
         while (true) {
             System.out.print("Informe o CPF: ");
             String cpf = sc.nextLine();
@@ -190,7 +218,7 @@ public class GerenciamentoHotel {
         }
     }
     
-    double lerPrecoDiariaValido() {
+    double lerPrecoDiariaValido() {//TODO criar exception
         double precoDiaria = -1; // Inicializando com um valor inválido
         while (precoDiaria <= 0) {
             System.out.print("Preço da diária: ");
@@ -206,7 +234,7 @@ public class GerenciamentoHotel {
         return precoDiaria;
     }
     
-    double lerSalarioPorHoraValido() {
+    double lerSalarioPorHoraValido() { //TODO criar exception
         double salarioPorHora = -1; // Inicializando com um valor inválido
         while (salarioPorHora <= 0) {
             System.out.print("Informe o salário por hora: ");
@@ -224,7 +252,7 @@ public class GerenciamentoHotel {
         return salarioPorHora;
     }
     
-    boolean validarHoras(int horas) {
+    boolean validarHoras(int horas) { //TODO criar exception
         if (horas < 0) {
             System.out.println("Erro: A quantidade de horas não pode ser negativa.");
             return false;
@@ -237,15 +265,14 @@ public class GerenciamentoHotel {
     }
     
     int lerInt() {
-    	while (true) {
-	        try {
-	            int inteiro = sc.nextInt();
-	            return inteiro;
-	        } catch (InputMismatchException e) {
-	            System.out.print("Entrada inválida. Por favor, insira um número inteiro: ");
-	            sc.nextLine();
-	        } 
-    	}
+        while (true) {
+            try {
+                return sc.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.print("Entrada inválida. Por favor, insira um número inteiro: ");
+                sc.nextLine(); // Limpa o buffer da entrada
+            }
+        }
     }
     
 	public void exibirMenuPrincipal() {
