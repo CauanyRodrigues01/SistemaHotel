@@ -9,12 +9,12 @@ public class Quarto {
     private double precoDiaria;
     private StatusQuarto status;
 
-    public Quarto(String tipo, int capacidade, double precoDiaria, StatusQuarto status) {
+    public Quarto(String tipo, int capacidade, double precoDiaria) {
         this.numQuarto = contador++;
         this.tipo = tipo;
         this.capacidade = capacidade;
         this.precoDiaria = precoDiaria;
-        this.status = status;
+        this.status = StatusQuarto.DISPONIVEL;
     }
     
     public boolean isDisponivel() {

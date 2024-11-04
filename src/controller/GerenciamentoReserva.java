@@ -11,6 +11,7 @@ import model.Hospede;
 import model.Quarto;
 import model.Reserva;
 import model.StatusQuarto;
+import model.StatusReserva;
 
 public class GerenciamentoReserva implements Gerenciamento {
 
@@ -33,7 +34,7 @@ public class GerenciamentoReserva implements Gerenciamento {
             Reserva reserva = optionalReserva.get();
             Quarto quarto = reserva.getQuarto();
 
-            if (quarto.getStatus().equals("Reservado")) {
+            if (quarto.getStatus().equals(StatusQuarto.RESERVADO)) {
                 quarto.setStatus(StatusQuarto.OCUPADO);
                 System.out.println("Check-In realizado com sucesso para a reserva com ID " + reserva.getIdReserva());
             } else {
@@ -53,11 +54,12 @@ public class GerenciamentoReserva implements Gerenciamento {
             Reserva reserva = optionalReserva.get();
             Quarto quartoDaReserva = reserva.getQuarto();
 
-            if (quartoDaReserva.getStatus().equals("Usando")) {
+            if (quartoDaReserva.getStatus().equals(StatusQuarto.OCUPADO)) {
             	double valorTotal = reserva.calcularValorReserva(quartoDaReserva.getPrecoDiaria());
                 System.out.printf("Check-Out realizado com sucesso para a reserva com ID ", idReserva);
                 System.out.printf("Valor total a ser pago: R$ %.2f", valorTotal);
                 quartoDaReserva.setStatus(StatusQuarto.DISPONIVEL);
+                reserva.setStatus(StatusReserva.CONCLUIDA);
             } else {
                 System.out.println("Quarto não está sendo usado, isso quer dizer que não foi feito check-in, então não é possível fazer check-out.");
             }

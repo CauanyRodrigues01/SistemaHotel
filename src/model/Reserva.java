@@ -11,7 +11,7 @@ public class Reserva {
 	private int numeroHospede;
 	private Quarto quarto;
 	private Hospede hospede;
-	private String status; //TODO usar enum
+	private StatusReserva status;
 	
 	public Reserva(int numeroHospede, LocalDate dataEntrada, LocalDate dataSaida, Quarto quarto, Hospede hospede) {
 		this.numeroHospede = numeroHospede;
@@ -20,7 +20,7 @@ public class Reserva {
 		this.quarto = quarto;
 		this.hospede = hospede;
 		this.idReserva = contador++;
-		this.status = "disponível";
+		this.status = StatusReserva.PENDENTE;
 		
 	}
 	
@@ -33,7 +33,6 @@ public class Reserva {
 	
 	public double calcularValorReserva(double precoDiaria) {
         int duracaoDiasReserva = duracaoEstadia();
-        System.out.println(duracaoDiasReserva * precoDiaria);
         return duracaoDiasReserva * precoDiaria;    
     }
 	
@@ -86,11 +85,11 @@ public class Reserva {
 		this.hospede = hospede;
 	}
 
-	public String getStatus() {
+	public StatusReserva getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(StatusReserva status) {
 		this.status = status;
 	}
 

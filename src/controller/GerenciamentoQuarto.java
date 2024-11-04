@@ -98,7 +98,7 @@ public class GerenciamentoQuarto implements Gerenciamento {
         double precoDiaria = sc.nextDouble(); //TODO validar entrada de preco
         sc.nextLine(); // Consumir nova linha
 
-        Quarto novoQuarto = new Quarto(tipo, capacidade, precoDiaria, StatusQuarto.DISPONIVEL);
+        Quarto novoQuarto = new Quarto(tipo, capacidade, precoDiaria);
         quartos.add(novoQuarto);
 
         System.out.println("Quarto adicionado com sucesso!");
