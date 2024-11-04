@@ -5,25 +5,23 @@ public class Funcionario extends Pessoa {
 	private String cargo;
 	private Double salarioPorHora;
 	private String turno;
-	private Integer horasTrabalhadas;
+	private int horasTrabalhadas;
 
-	public Funcionario(String nome, String cpf, String cargo, Double salarioPorHora, String turno,
-			Integer horasTrabalhadas) {
+	public Funcionario(String nome, String cpf, String cargo, Double salarioPorHora, String turno) {
 		super(nome, cpf);
 		this.cargo = cargo;
 		this.salarioPorHora = salarioPorHora;
 		this.turno = turno;
-		this.horasTrabalhadas = horasTrabalhadas;
+		this.horasTrabalhadas = 0;
 	}
 	
-	// Funções específicas para manipulação do Funcionário
-	public void registrarHoras(int horas) {
-		this.horasTrabalhadas += horas;
-	}
+    public void registrarHoras(int horas) {
+    	this.horasTrabalhadas += horas;
+    }
 
-	public double calcularSalario() {
-		return horasTrabalhadas * salarioPorHora;
-	}
+    public double calcularSalario() {
+        return this.horasTrabalhadas * this.salarioPorHora; 
+    }
 	
 	// Getters e Setters
 	public String getCargo() {
@@ -50,11 +48,11 @@ public class Funcionario extends Pessoa {
 		this.turno = turno;
 	}
 
-	public Integer getHorasTrabalhadas() {
+	public int getHorasTrabalhadas() {
 		return horasTrabalhadas;
 	}
 
-	public void setHorasTrabalhadas(Integer horasTrabalhadas) {
+	public void setHorasTrabalhadas(int horasTrabalhadas) {
 		this.horasTrabalhadas = horasTrabalhadas;
 	}
 

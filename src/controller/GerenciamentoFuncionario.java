@@ -27,15 +27,31 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 	                       .findFirst();
 	}
 	
-	public void registrarHoras() { //TODO fazer
-		//funcionario.registrarHoras(int horas);
+	public void registrarHoras() {
+	    String cpfFuncionario = gerenciamentoHotel.lerCpf();
+	    
+	    buscarFuncionarioPorCpf(cpfFuncionario).ifPresentOrElse(funcionario -> {
+	        System.out.print("Informe a quantidade de horas a registrar: ");
+	        int horas = gerenciamentoHotel.lerInt();
+	        
+	        if (gerenciamentoHotel.validarHoras(horas)) {
+	            funcionario.registrarHoras(horas);
+	            System.out.println("Horas registradas com sucesso!");
+	        } else {
+	            System.out.println("Registro de horas falhou devido a entradas inválidas.");
+	        }
+	    }, () -> System.out.println("Funcionário com CPF " + cpfFuncionario + " não encontrado."));
 	}
 	
-	public void calcularSalario() { //TODO fazer
-		//double salario = funcionario.calcularSalario();
-		//System.out.println(salario);
+	public void calcularSalario() {
+	    String cpfFuncionario = gerenciamentoHotel.lerCpf();
+	    
+	    buscarFuncionarioPorCpf(cpfFuncionario).ifPresentOrElse(funcionario -> {
+	        double salario = funcionario.calcularSalario();
+	        System.out.println("O salário calculado para " + funcionario.getNome() + " é: R$ " + salario);
+	    }, () -> System.out.println("Funcionário com CPF " + cpfFuncionario + " não encontrado."));
 	}
-
+	
 	@Override
 	public void buscar() {
 	    String cpfBuscar = gerenciamentoHotel.lerCpf();
@@ -49,23 +65,21 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 	@Override
 	public void adicionar() {
 
-		System.out.println("Informe o nome do novo funcionário: ");
+		System.out.print("Informe o nome do novo funcionário: ");
 		String nomeNovoFuncionario = sc.nextLine();
 
 		String cpfNovoFuncionario = gerenciamentoHotel.lerCpf();
 
-		System.out.println("Informe o cargo: ");
+		System.out.print("Informe o cargo: ");
 		String cargoNovoFuncionario = sc.nextLine();
 
-		System.out.println("Informe o salário por hora: ");
-		double salarioPorHoraNovoFuncionario = sc.nextDouble(); //TODO validar entrada
-		sc.nextLine();
+		double salarioPorHoraNovo = gerenciamentoHotel.lerSalarioPorHoraValido();
 
-		System.out.println("Informe o turno de trabalho: ");
+		System.out.print("Informe o turno de trabalho: ");
 		String turnoNovoFuncionario = sc.nextLine();
 
 		Funcionario novoFuncionario = new Funcionario(nomeNovoFuncionario, cpfNovoFuncionario, cargoNovoFuncionario,
-				salarioPorHoraNovoFuncionario, turnoNovoFuncionario, null);//TODO validar entrada
+				salarioPorHoraNovo, turnoNovoFuncionario);
 
 		funcionarios.add(novoFuncionario);
 		System.out.println("Funcionário cadastrado com sucesso!");
@@ -85,9 +99,8 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 	        System.out.print("Novo cargo: ");
 	        funcionario.setCargo(sc.nextLine());
 
-	        System.out.print("Novo salário por hora: ");
-	        funcionario.setSalarioPorHora(sc.nextDouble());//TODO validar entrada
-	        sc.nextLine(); // Consumir nova linha
+	        double salarioPorHoraNovo = gerenciamentoHotel.lerSalarioPorHoraValido();
+	        funcionario.setSalarioPorHora(salarioPorHoraNovo);
 
 	        System.out.print("Novo turno de trabalho: ");
 	        funcionario.setTurno(sc.nextLine());
@@ -125,12 +138,14 @@ public class GerenciamentoFuncionario implements Gerenciamento {
 
 	@Override
 	public Map<Integer, String> getOpcoesEspecificas() {
-		return Map.of();
+		return Map.of(6, "Registrar Horas", 7, "Calcular Salário");
 	}
 
 	@Override
 	public void executarOpcaoEspecifica(int opcao, Scanner sc) {
 		switch (opcao) {
+		case 6 -> registrarHoras();
+		case 7 -> calcularSalario();
 		default -> System.out.println("Opção específica inválida");
 		}
 	}

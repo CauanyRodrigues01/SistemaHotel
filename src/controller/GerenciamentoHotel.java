@@ -117,18 +117,6 @@ public class GerenciamentoHotel {
         }
     }
     
-    int lerInt() {
-    	while (true) {
-	        try {
-	            int inteiro = sc.nextInt();
-	            return inteiro;
-	        } catch (InputMismatchException e) {
-	            System.out.print("Entrada inválida. Por favor, insira um número inteiro: ");
-	            sc.nextLine();
-	        } 
-    	}
-    }
-    
     int lerNumeroHospedes() {
         while (true) {
             System.out.print("Digite a quantidade de hóspedes (máximo 10): ");
@@ -218,7 +206,7 @@ public class GerenciamentoHotel {
         return precoDiaria;
     }
     
-    private double lerSalarioPorHoraValido() {
+    double lerSalarioPorHoraValido() {
         double salarioPorHora = -1; // Inicializando com um valor inválido
         while (salarioPorHora <= 0) {
             System.out.print("Informe o salário por hora: ");
@@ -235,7 +223,30 @@ public class GerenciamentoHotel {
         sc.nextLine(); // Consumir nova linha
         return salarioPorHora;
     }
-
+    
+    boolean validarHoras(int horas) {
+        if (horas < 0) {
+            System.out.println("Erro: A quantidade de horas não pode ser negativa.");
+            return false;
+        }
+        if (horas > 24) {
+            System.out.println("Erro: A quantidade de horas não pode exceder 24 por dia.");
+            return false;
+        }
+        return true;
+    }
+    
+    int lerInt() {
+    	while (true) {
+	        try {
+	            int inteiro = sc.nextInt();
+	            return inteiro;
+	        } catch (InputMismatchException e) {
+	            System.out.print("Entrada inválida. Por favor, insira um número inteiro: ");
+	            sc.nextLine();
+	        } 
+    	}
+    }
     
 	public void exibirMenuPrincipal() {
 		while (true) {
