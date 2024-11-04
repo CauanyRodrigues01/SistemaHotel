@@ -33,11 +33,13 @@ public class GerenciamentoReserva implements Gerenciamento {
 
         optionalReserva.ifPresentOrElse(reserva -> {
             int numQuarto = reserva.getQuarto().getNumQuarto();
+            
             if (gerenciamentoHotel.ocuparQuarto(numQuarto)) {
                 System.out.println("Check-In realizado com sucesso!");
             } else {
                 System.out.println("Não foi possível realizar o check-in.");
             }
+            
         }, () -> System.out.println("Reserva não encontrada."));
     }
 
@@ -49,14 +51,14 @@ public class GerenciamentoReserva implements Gerenciamento {
 
         optionalReserva.ifPresentOrElse(reserva -> {
             int numQuarto = reserva.getQuarto().getNumQuarto();
-            if (reserva.getQuarto().getStatus() == StatusQuarto.OCUPADO) {
-                double valorTotal = reserva.calcularValorReserva(reserva.getQuarto().getPrecoDiaria());
-                System.out.printf("Check-Out realizado com sucesso! Valor total: R$ %.2f%n", valorTotal);
-                gerenciamentoHotel.liberarQuarto(numQuarto);
-                reserva.setStatus(StatusReserva.CONCLUIDA);
+            
+            if (gerenciamentoHotel.liberarQuarto(numQuarto)) {
+            	reserva.setStatus(StatusReserva.CONCLUIDA);
+                System.out.println("Check-Out realizado com sucesso!");
             } else {
-                System.out.println("O quarto já está liberado.");
+                System.out.println("Não foi possível realizar o check-Out.");
             }
+            
         }, () -> System.out.println("Reserva não encontrada."));
     }
 
@@ -84,7 +86,7 @@ public class GerenciamentoReserva implements Gerenciamento {
             if (gerenciamentoHotel.reservarQuarto(numQuarto)) {
                 return gerenciamentoHotel.buscarQuartoPorNumero(numQuarto).orElse(null);
             }
-            System.out.println("Quarto não encontrado ou indisponível. Deseja tentar novamente? (S/N): ");
+            System.out.print("Deseja tentar novamente? (S/N): ");
             sc.nextLine();
             if (!continuarOperacao()) return null;
         }
@@ -109,11 +111,13 @@ public class GerenciamentoReserva implements Gerenciamento {
 	public void adicionar() {
 	    Hospede hospede = obterHospedeValido();
 	    if (hospede == null) return;
+	    
+	    int numeroHospedes = gerenciamentoHotel.lerNumeroHospedes();
+	    sc.nextLine();
 
 	    Quarto quarto = obterQuartoValidoParaReserva();
 	    if (quarto == null) return;
 
-	    int numeroHospedes = gerenciamentoHotel.lerNumeroHospedes();
 	    LocalDate dataEntrada = gerenciamentoHotel.lerDataEntrada();
 	    LocalDate dataSaida = gerenciamentoHotel.lerDataSaida(dataEntrada);
 
