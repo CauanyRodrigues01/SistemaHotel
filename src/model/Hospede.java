@@ -24,8 +24,16 @@ public class Hospede extends Pessoa {
         reservas.add(novaReserva);
     }
 
-    public List<Reserva> listarHistoricoDeReservas() {
-        return reservas;
+    public void listarHistoricoDeReservas() {
+        if (reservas.isEmpty()) {
+            System.out.println("Não há reservas no histórico.");
+            return;
+        }
+
+        System.out.println("Histórico de Reservas:");
+        for (Reserva reserva : reservas) {
+            System.out.println(reserva);
+        }
     }
 
     // Getters e Setters

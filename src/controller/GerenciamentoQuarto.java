@@ -23,11 +23,11 @@ public class GerenciamentoQuarto implements Gerenciamento {
 
         if (optionalQuarto.isPresent()) {
         	if (optionalQuarto.get().isDisponivel()) {
-        		optionalQuarto.get().setStatus("indisponível");
+        		optionalQuarto.get().setStatus("Reservado");
                 System.out.println("Quarto " + numQuarto + " reservado com sucesso!");
                 return true;
         	} else {
-        		System.out.println("Quarto não disponível para reserva.");
+        		System.out.println("Quarto indisponível para reserva.");
         		return false;
         	}
         } else {

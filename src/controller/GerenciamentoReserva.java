@@ -25,39 +25,40 @@ public class GerenciamentoReserva implements Gerenciamento {
 
     public void fazerCheckIn() {
         int idReserva = this.gerenciamentoHotel.lerIdReserva();
+        sc.nextLine();
 
         Optional<Reserva> optionalReserva = buscarReservaPorId(idReserva);
         if (optionalReserva.isPresent()) {
             Reserva reserva = optionalReserva.get();
             Quarto quarto = reserva.getQuarto();
 
-            if (quarto.getStatus().equals("disponível")) {
-                quarto.setStatus("indisponível");
-                System.out.println("Check-In realizado com sucesso para a reserva com ID: " + reserva.getIdReserva());
+            if (quarto.getStatus().equals("Reservado")) {
+                quarto.setStatus("Usando");
+                System.out.println("Check-In realizado com sucesso para a reserva com ID " + reserva.getIdReserva());
             } else {
-                System.out.println("Quarto está indisponível para check-in.");
+                System.out.println("Já foi feito check-in npara essa Reserva.");
             }
         } else {
-            System.out.println("Reserva não encontrada com o ID: " + idReserva);
+            System.out.println("Reserva não encontrada com o ID " + idReserva);
         }
     }
 
     public void fazerCheckOut() {
         int idReserva = this.gerenciamentoHotel.lerIdReserva();
+        sc.nextLine();
 
         Optional<Reserva> optionalReserva = buscarReservaPorId(idReserva);
         if (optionalReserva.isPresent()) {
             Reserva reserva = optionalReserva.get();
             Quarto quartoDaReserva = reserva.getQuarto();
 
-            if (quartoDaReserva.getStatus().equals("indisponível")) {
-                quartoDaReserva.setStatus("disponível");
-
-                double valorTotal = reserva.calcularValorReserva(quartoDaReserva.getPrecoDiaria());
-                System.out.printf("Check-Out realizado com sucesso para a reserva com ID: %d.%n", idReserva);
-                System.out.printf("Valor total a ser pago: R$ %.2f%n", valorTotal);
+            if (quartoDaReserva.getStatus().equals("Usando")) {
+            	double valorTotal = reserva.calcularValorReserva(quartoDaReserva.getPrecoDiaria());
+                System.out.printf("Check-Out realizado com sucesso para a reserva com ID ", idReserva);
+                System.out.printf("Valor total a ser pago: R$ %.2f", valorTotal);
+                quartoDaReserva.setStatus("Disponível");
             } else {
-                System.out.println("Quarto já está disponível para check-out.");
+                System.out.println("Quarto não está sendo usado, isso quer dizer que não foi feito check-in, então não é possível fazer check-out.");
             }
         } else {
             System.out.println("Reserva não encontrada com o ID: " + idReserva);
@@ -125,7 +126,6 @@ public class GerenciamentoReserva implements Gerenciamento {
 	            System.out.print("Deseja tentar novamente? (S/N): ");
 	            String opcao = sc.nextLine().trim().toUpperCase();
 
-	            
 	            if (opcao.equals("N")) {
 	                System.out.println("Operação de reserva cancelada.");
 	                return; 
@@ -142,7 +142,8 @@ public class GerenciamentoReserva implements Gerenciamento {
 	    Reserva reserva = new Reserva(numeroHospedes, dataEntrada, dataSaida, quarto, hospede);
 	    hospede.adicionarReserva(reserva);
 	    reservas.add(reserva);
-	    //TODO adicionar reserva no hospede
+	    hospede.adicionarReserva(reserva);
+	    
 	    System.out.println("Sua reserva foi realizada com sucesso! Obrigada pela preferência.");
 	}
 
@@ -188,16 +189,16 @@ public class GerenciamentoReserva implements Gerenciamento {
     @Override
     public Map<Integer, String> getOpcoesEspecificas() {
         return Map.of(
-            6, "Fazer Check-in",
-            7, "Fazer Check-out"
+            7, "Fazer Check-in",
+            6, "Fazer Check-out"
         );
     }
 
     @Override
     public void executarOpcaoEspecifica(int opcao, Scanner sc) {
         switch (opcao) {
-            case 6 -> fazerCheckIn();
-            case 7 -> fazerCheckOut();
+            case 7 -> fazerCheckIn();
+            case 6 -> fazerCheckOut();
             default -> System.out.println("Opção específica inválida");
         }
     }

@@ -28,6 +28,18 @@ public class GerenciamentoHospede implements Gerenciamento {
                        .findFirst();
     }
     
+    public void listarHistoricoDeUmHospede() {
+    	
+    	String cpfBuscar = gerenciamentoHotel.lerCpf();
+    	
+    	Optional<Hospede> hospedeBuscado = buscarHospedePorCpf(cpfBuscar);
+    	
+    	hospedeBuscado.ifPresentOrElse(
+                hospede -> hospede.listarHistoricoDeReservas(),
+                () -> System.out.println("Hóspede não encontrado.")
+            );
+    }
+    
     @Override
     public void buscar() {
         String cpfBuscar = gerenciamentoHotel.lerCpf();
@@ -108,12 +120,13 @@ public class GerenciamentoHospede implements Gerenciamento {
     
     @Override
     public Map<Integer, String> getOpcoesEspecificas() {
-        return Map.of();
+        return Map.of(6, "Listar Histórico");
     }
 
     @Override
     public void executarOpcaoEspecifica(int opcao, Scanner sc) {
         switch (opcao) {
+        	case 6 -> listarHistoricoDeUmHospede();
             default -> System.out.println("Opção específica inválida");
         }
     }

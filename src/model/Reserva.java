@@ -33,6 +33,7 @@ public class Reserva {
 	
 	public double calcularValorReserva(double precoDiaria) {
         int duracaoDiasReserva = duracaoEstadia();
+        System.out.println(duracaoDiasReserva * precoDiaria);
         return duracaoDiasReserva * precoDiaria;    
     }
 	
