@@ -25,7 +25,41 @@ public class GerenciamentoHotel {
 		this.gerenciamentos.put(4, new GerenciamentoReserva(scanner, this));
 	}
 
-	// public void inicializarSistema()
+    public boolean reservarQuarto(int numQuarto) {
+    	GerenciamentoQuarto gerenciamentoQuarto = (GerenciamentoQuarto) gerenciamentos.get(3);
+        return gerenciamentoQuarto.reservarQuarto(numQuarto);
+    }
+
+    public boolean liberarQuarto(int numQuarto) {
+    	GerenciamentoQuarto gerenciamentoQuarto = (GerenciamentoQuarto) gerenciamentos.get(3);
+        return gerenciamentoQuarto.liberarQuarto(numQuarto);
+    }
+    
+    public boolean ocuparQuarto(int numQuarto) {
+    	GerenciamentoQuarto gerenciamentoQuarto = (GerenciamentoQuarto) gerenciamentos.get(3);
+        return gerenciamentoQuarto.ocuparQuarto(numQuarto);
+    }
+
+//    public void realizarCheckIn(int idReserva) {
+//    	GerenciamentoReserva gerenciamentoReserva = (GerenciamentoReserva) gerenciamentos.get(4);
+//        gerenciamentoReserva.fazerCheckIn();
+//    }
+//
+//    public void realizarCheckOut(int idReserva) {
+//    	GerenciamentoReserva gerenciamentoReserva = (GerenciamentoReserva) gerenciamentos.get(4);
+//        gerenciamentoReserva.fazerCheckOut();
+//    }
+    
+    public Optional<Hospede> buscarHospedePorCpf(String cpf) {
+        GerenciamentoHospede gerenciamentoHospede = (GerenciamentoHospede) gerenciamentos.get(1);
+        return gerenciamentoHospede.buscarHospedePorCpf(cpf);
+    }
+
+    public Optional<Quarto> buscarQuartoPorNumero(int numeroQuarto) {
+        GerenciamentoQuarto gerenciamentoQuarto = (GerenciamentoQuarto) gerenciamentos.get(3);
+        return gerenciamentoQuarto.buscarQuartoPorNumero(numeroQuarto);
+    }
+
 
 	int lerOpcaoMenu(Scanner sc) {
 		while (true) {
@@ -166,21 +200,6 @@ public class GerenciamentoHotel {
         }
     }
     
-    public boolean reservarQuarto(int numQuarto) {
-    	GerenciamentoQuarto gerenciamentoQuarto = (GerenciamentoQuarto) gerenciamentos.get(3);
-    	return gerenciamentoQuarto.reservarQuarto(numQuarto);
-    }
-    
-    public Optional<Hospede> buscarHospedePorCpf(String cpf) {
-        GerenciamentoHospede gerenciamentoHospede = (GerenciamentoHospede) gerenciamentos.get(1);
-        return gerenciamentoHospede.buscarHospedePorCpf(cpf);
-    }
-
-    public Optional<Quarto> buscarQuartoPorNumero(int numeroQuarto) {
-        GerenciamentoQuarto gerenciamentoQuarto = (GerenciamentoQuarto) gerenciamentos.get(3);
-        return gerenciamentoQuarto.buscarQuartoPorNumero(numeroQuarto);
-    }
-
 	public void exibirMenuPrincipal() {
 		while (true) {
 			System.out.println(

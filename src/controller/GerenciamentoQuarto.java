@@ -20,37 +20,50 @@ public class GerenciamentoQuarto implements Gerenciamento {
     }
 
     public boolean reservarQuarto(int numQuarto) {
-
-        Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
-
-        if (optionalQuarto.isPresent()) {
-        	if (optionalQuarto.get().isDisponivel()) {
-        		optionalQuarto.get().setStatus(StatusQuarto.RESERVADO);
-                System.out.println("Quarto " + numQuarto + " reservado com sucesso!");
-                return true;
-        	} else {
-        		System.out.println("Quarto indisponível para reserva.");
-        		return false;
-        	}
-        } else {
-            System.out.println("Quarto não encontrado.");
-            return false;
-        }
+        return atualizarStatusQuarto(numQuarto, StatusQuarto.RESERVADO, 
+                                     "Quarto reservado com sucesso!", "Quarto indisponível para reserva.");
     }
 
-    public void liberarQuarto() {//TODO não acessível para o usuario
-        int numQuarto = gerenciamentoHotel.lerNumQuarto();
+    public boolean liberarQuarto(int numQuarto) {
+        return atualizarStatusQuarto(numQuarto, StatusQuarto.DISPONIVEL, 
+                                     "Quarto liberado com sucesso!", "Quarto já está disponível.");
+    }
 
+    public boolean ocuparQuarto(int numQuarto) {
         Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
-
-        if (optionalQuarto.isPresent() && !optionalQuarto.get().isDisponivel()) {
-            optionalQuarto.get().setStatus(StatusQuarto.DISPONIVEL);
-            System.out.println("Quarto " + numQuarto + " liberado com sucesso!");
-        } else if (optionalQuarto.isPresent()) {
-            System.out.println("Quarto já está disponível.");
+        
+        if (optionalQuarto.isPresent()) {
+            Quarto quarto = optionalQuarto.get();
+            if (quarto.getStatus() == StatusQuarto.RESERVADO) { // Verifica se o quarto está reservado
+                return atualizarStatusQuarto(numQuarto, StatusQuarto.OCUPADO, 
+                                             "Check-in realizado com sucesso!", "Erro: quarto já está ocupado.");
+            } else {
+                System.out.println("Erro: Apenas quartos reservados podem ser ocupados.");
+            }
         } else {
             System.out.println("Quarto não encontrado.");
         }
+        
+        return false;
+    }
+
+    private boolean atualizarStatusQuarto(int numQuarto, StatusQuarto novoStatus, String mensagemSucesso, String mensagemErro) {
+        Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
+        
+        if (optionalQuarto.isPresent()) {
+            Quarto quarto = optionalQuarto.get();
+            if (quarto.getStatus() != novoStatus) {
+                quarto.setStatus(novoStatus);
+                System.out.println(mensagemSucesso);
+                return true;
+            } else {
+                System.out.println(mensagemErro);
+            }
+        } else {
+            System.out.println("Quarto não encontrado.");
+        }
+        
+        return false;
     }
 
     public void listarQuartosDisponiveis() {

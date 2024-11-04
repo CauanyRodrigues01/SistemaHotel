@@ -30,42 +30,34 @@ public class GerenciamentoReserva implements Gerenciamento {
         sc.nextLine();
 
         Optional<Reserva> optionalReserva = buscarReservaPorId(idReserva);
-        if (optionalReserva.isPresent()) {
-            Reserva reserva = optionalReserva.get();
-            Quarto quarto = reserva.getQuarto();
 
-            if (quarto.getStatus().equals(StatusQuarto.RESERVADO)) {
-                quarto.setStatus(StatusQuarto.OCUPADO);
-                System.out.println("Check-In realizado com sucesso para a reserva com ID " + reserva.getIdReserva());
+        optionalReserva.ifPresentOrElse(reserva -> {
+            int numQuarto = reserva.getQuarto().getNumQuarto();
+            if (gerenciamentoHotel.ocuparQuarto(numQuarto)) {
+                System.out.println("Check-In realizado com sucesso!");
             } else {
-                System.out.println("Já foi feito check-in npara essa Reserva.");
+                System.out.println("Não foi possível realizar o check-in.");
             }
-        } else {
-            System.out.println("Reserva não encontrada com o ID " + idReserva);
-        }
+        }, () -> System.out.println("Reserva não encontrada."));
     }
 
     public void fazerCheckOut() {
         int idReserva = this.gerenciamentoHotel.lerIdReserva();
         sc.nextLine();
-
+        
         Optional<Reserva> optionalReserva = buscarReservaPorId(idReserva);
-        if (optionalReserva.isPresent()) {
-            Reserva reserva = optionalReserva.get();
-            Quarto quartoDaReserva = reserva.getQuarto();
 
-            if (quartoDaReserva.getStatus().equals(StatusQuarto.OCUPADO)) {
-            	double valorTotal = reserva.calcularValorReserva(quartoDaReserva.getPrecoDiaria());
-                System.out.printf("Check-Out realizado com sucesso para a reserva com ID ", idReserva);
-                System.out.printf("Valor total a ser pago: R$ %.2f", valorTotal);
-                quartoDaReserva.setStatus(StatusQuarto.DISPONIVEL);
+        optionalReserva.ifPresentOrElse(reserva -> {
+            int numQuarto = reserva.getQuarto().getNumQuarto();
+            if (reserva.getQuarto().getStatus() == StatusQuarto.OCUPADO) {
+                double valorTotal = reserva.calcularValorReserva(reserva.getQuarto().getPrecoDiaria());
+                System.out.printf("Check-Out realizado com sucesso! Valor total: R$ %.2f%n", valorTotal);
+                gerenciamentoHotel.liberarQuarto(numQuarto);
                 reserva.setStatus(StatusReserva.CONCLUIDA);
             } else {
-                System.out.println("Quarto não está sendo usado, isso quer dizer que não foi feito check-in, então não é possível fazer check-out.");
+                System.out.println("O quarto já está liberado.");
             }
-        } else {
-            System.out.println("Reserva não encontrada com o ID: " + idReserva);
-        }
+        }, () -> System.out.println("Reserva não encontrada."));
     }
 
     // Método auxiliar para buscar quarto pelo id e retorná-lo
@@ -73,6 +65,34 @@ public class GerenciamentoReserva implements Gerenciamento {
         return reservas.stream()
                        .filter(r -> r.getIdReserva() == idReserva)
                        .findFirst();
+    }
+    
+    private Hospede obterHospedeValido() {
+        while (true) {
+            String cpf = gerenciamentoHotel.lerCpf();
+            Optional<Hospede> hospedeOptional = gerenciamentoHotel.buscarHospedePorCpf(cpf);
+            if (hospedeOptional.isPresent()) return hospedeOptional.get();
+
+            System.out.println("Hóspede não encontrado. Deseja tentar novamente? (S/N): ");
+            if (!continuarOperacao()) return null;
+        }
+    }
+
+    private Quarto obterQuartoValidoParaReserva() {
+        while (true) {
+            int numQuarto = gerenciamentoHotel.lerNumQuarto();
+            if (gerenciamentoHotel.reservarQuarto(numQuarto)) {
+                return gerenciamentoHotel.buscarQuartoPorNumero(numQuarto).orElse(null);
+            }
+            System.out.println("Quarto não encontrado ou indisponível. Deseja tentar novamente? (S/N): ");
+            sc.nextLine();
+            if (!continuarOperacao()) return null;
+        }
+    }
+
+    private boolean continuarOperacao() {
+        String opcao = sc.nextLine().trim().toUpperCase();
+        return "S".equals(opcao);
     }
     
 	@Override
@@ -87,67 +107,20 @@ public class GerenciamentoReserva implements Gerenciamento {
 
 	@Override
 	public void adicionar() {
-	    Hospede hospede = null;
-	    while (true) {
-	        String cpf = this.gerenciamentoHotel.lerCpf();
-	        Optional<Hospede> hospedeOptional = this.gerenciamentoHotel.buscarHospedePorCpf(cpf);
+	    Hospede hospede = obterHospedeValido();
+	    if (hospede == null) return;
 
-	        if (hospedeOptional.isPresent()) {
-	            hospede = hospedeOptional.get();
-	            break;  // Sai do loop quando encontrar um hóspede válido
-	        } else {
-	            System.out.println("Hóspede não encontrado. Certifique-se de que o hóspede está cadastrado.");
-	            System.out.print("Deseja tentar novamente? (S/N): ");
-	            String opcao = sc.nextLine().trim().toUpperCase();
+	    Quarto quarto = obterQuartoValidoParaReserva();
+	    if (quarto == null) return;
 
-	            if (opcao.equals("N")) {
-	                System.out.println("Operação de reserva cancelada.");
-	                return;  // Encerra o método se o usuário não quiser continuar
-	            } else if (!opcao.equals("S")) {
-	            	System.out.println("Opção inválida.");
-	            }
-	        }
-	    }
-
-	    Quarto quarto = null;
-	    while (true) {
-	        int numQuarto = gerenciamentoHotel.lerNumQuarto();
-	        Optional<Quarto> quartoOptional = this.gerenciamentoHotel.buscarQuartoPorNumero(numQuarto);
-
-	        if (quartoOptional.isPresent()) {
-	        	
-	        	boolean reservaQuarto = this.gerenciamentoHotel.reservarQuarto(numQuarto);
-	        	
-	        	if (reservaQuarto) {
-	        		quarto = quartoOptional.get();
-		            break;
-	        	} 	        	
-	             
-	        } else {
-	        	sc.nextLine();
-	            System.out.println("Quarto não encontrado. Certifique-se de que o quarto está cadastrado.");
-	            System.out.print("Deseja tentar novamente? (S/N): ");
-	            String opcao = sc.nextLine().trim().toUpperCase();
-
-	            if (opcao.equals("N")) {
-	                System.out.println("Operação de reserva cancelada.");
-	                return; 
-	            } else if (!opcao.equals("S")) {
-	            	System.out.println("Opção inválida.");
-	            }
-	        }
-	    }
-	    
-	    int numeroHospedes = this.gerenciamentoHotel.lerNumeroHospedes();
-	    LocalDate dataEntrada = this.gerenciamentoHotel.lerDataEntrada();
-	    LocalDate dataSaida = this.gerenciamentoHotel.lerDataSaida(dataEntrada);
+	    int numeroHospedes = gerenciamentoHotel.lerNumeroHospedes();
+	    LocalDate dataEntrada = gerenciamentoHotel.lerDataEntrada();
+	    LocalDate dataSaida = gerenciamentoHotel.lerDataSaida(dataEntrada);
 
 	    Reserva reserva = new Reserva(numeroHospedes, dataEntrada, dataSaida, quarto, hospede);
 	    hospede.adicionarReserva(reserva);
 	    reservas.add(reserva);
-	    hospede.adicionarReserva(reserva);
-	    
-	    System.out.println("Sua reserva foi realizada com sucesso! Obrigada pela preferência.");
+	    System.out.println("Sua reserva foi realizada com sucesso!");
 	}
 
 
