@@ -106,6 +106,7 @@ public class GerenciamentoHotel {
                 int id = sc.nextInt();
                 if (id <= 0) {
                     System.out.println("\nDigite um valor maior que zero.\n");
+                    sc.nextLine();
                 } else {
                     return id;
                 }
@@ -122,7 +123,8 @@ public class GerenciamentoHotel {
 	            int inteiro = sc.nextInt();
 	            return inteiro;
 	        } catch (InputMismatchException e) {
-	            System.out.println("Entrada inválida. Por favor, insira um número inteiro.");
+	            System.out.print("Entrada inválida. Por favor, insira um número inteiro: ");
+	            sc.nextLine();
 	        } 
     	}
     }
@@ -199,6 +201,41 @@ public class GerenciamentoHotel {
             }
         }
     }
+    
+    double lerPrecoDiariaValido() {
+        double precoDiaria = -1; // Inicializando com um valor inválido
+        while (precoDiaria <= 0) {
+            System.out.print("Preço da diária: ");
+            if (sc.hasNextDouble()) {
+                precoDiaria = sc.nextDouble();
+                if (precoDiaria <= 0) {
+                    System.out.println("Erro: o preço da diária deve ser maior que zero. Tente novamente.");
+                }
+            } else {
+                System.out.println("Erro: entrada inválida. Por favor, insira um número.");
+            }
+        }
+        return precoDiaria;
+    }
+    
+    private double lerSalarioPorHoraValido() {
+        double salarioPorHora = -1; // Inicializando com um valor inválido
+        while (salarioPorHora <= 0) {
+            System.out.print("Informe o salário por hora: ");
+            if (sc.hasNextDouble()) {
+                salarioPorHora = sc.nextDouble();
+                if (salarioPorHora <= 0) {
+                    System.out.println("Erro: o salário por hora deve ser maior que zero. Tente novamente.");
+                }
+            } else {
+                System.out.println("Erro: entrada inválida. Por favor, insira um número.");
+                sc.next(); // Limpa o valor inválido da entrada
+            }
+        }
+        sc.nextLine(); // Consumir nova linha
+        return salarioPorHora;
+    }
+
     
 	public void exibirMenuPrincipal() {
 		while (true) {

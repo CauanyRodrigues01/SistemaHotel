@@ -92,11 +92,8 @@ public class GerenciamentoQuarto implements Gerenciamento {
 
         System.out.print("Capacidade do quarto: ");
         int capacidade = gerenciamentoHotel.lerInt();
-        sc.nextLine(); // Consumir nova linha
 
-        System.out.print("Preço da diária: ");
-        double precoDiaria = sc.nextDouble(); //TODO validar entrada de preco
-        sc.nextLine(); // Consumir nova linha
+        double precoDiaria = gerenciamentoHotel.lerPrecoDiariaValido();
 
         Quarto novoQuarto = new Quarto(tipo, capacidade, precoDiaria);
         quartos.add(novoQuarto);
@@ -107,7 +104,6 @@ public class GerenciamentoQuarto implements Gerenciamento {
     @Override
     public void editar() {
         int numQuarto = gerenciamentoHotel.lerNumQuarto();
-        sc.nextLine(); // Consumir nova linha
 
         buscarQuartoPorNumero(numQuarto).ifPresentOrElse(quarto -> {
             System.out.print("Novo tipo do quarto: ");
@@ -116,9 +112,8 @@ public class GerenciamentoQuarto implements Gerenciamento {
             System.out.print("Nova capacidade: ");
             quarto.setCapacidade(gerenciamentoHotel.lerInt());
             
-            System.out.print("Novo preço da diária: ");  //TODO validar entrada de preco
-            quarto.setPrecoDiaria(sc.nextDouble());
-            sc.nextLine(); // Consumir nova linha
+            System.out.print("Nova preco ");
+            quarto.setPrecoDiaria(gerenciamentoHotel.lerPrecoDiariaValido());
 
             System.out.println("Quarto atualizado com sucesso!");
         }, () -> System.out.println("Quarto não encontrado."));

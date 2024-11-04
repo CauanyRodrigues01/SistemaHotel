@@ -52,9 +52,16 @@ public class GerenciamentoReserva implements Gerenciamento {
         optionalReserva.ifPresentOrElse(reserva -> {
             int numQuarto = reserva.getQuarto().getNumQuarto();
             
+            
+            
             if (gerenciamentoHotel.liberarQuarto(numQuarto)) {
+            	
+                // Calcular o valor total da reserva
+                double precoDiaria = reserva.getQuarto().getPrecoDiaria();
+                double valorTotal = reserva.calcularValorReserva(precoDiaria);
+            	
             	reserva.setStatus(StatusReserva.CONCLUIDA);
-                System.out.println("Check-Out realizado com sucesso!");
+            	System.out.printf("Check-Out realizado com sucesso! Valor total: R$ %.2f%n", valorTotal);
             } else {
                 System.out.println("Não foi possível realizar o check-Out.");
             }
@@ -113,7 +120,6 @@ public class GerenciamentoReserva implements Gerenciamento {
 	    if (hospede == null) return;
 	    
 	    int numeroHospedes = gerenciamentoHotel.lerNumeroHospedes();
-	    sc.nextLine();
 
 	    Quarto quarto = obterQuartoValidoParaReserva();
 	    if (quarto == null) return;
