@@ -2,18 +2,23 @@ package model;
 
 public class Quarto {
 	
+	private static int contador = 1;
     private int numQuarto;
     private String tipo;
     private int capacidade;
     private double precoDiaria;
-    private String status;
+    private StatusQuarto status;
 
-    public Quarto(int numQuarto, String tipo, int capacidade, double precoDiaria, String status) {
-        this.numQuarto = numQuarto;
+    public Quarto(String tipo, int capacidade, double precoDiaria) {
+        this.numQuarto = contador++;
         this.tipo = tipo;
         this.capacidade = capacidade;
         this.precoDiaria = precoDiaria;
-        this.status = status;
+        this.status = StatusQuarto.DISPONIVEL;
+    }
+    
+    public boolean isDisponivel() {
+        return status == StatusQuarto.DISPONIVEL;
     }
     
     // Getters e Setters
@@ -49,11 +54,11 @@ public class Quarto {
         this.precoDiaria = precoDiaria;
     }
 
-    public String getStatus() {
+    public StatusQuarto getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(StatusQuarto status) {
         this.status = status;
     }
 

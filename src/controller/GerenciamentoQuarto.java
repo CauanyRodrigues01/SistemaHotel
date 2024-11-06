@@ -1,164 +1,158 @@
 package controller;
 
 import model.Quarto;
+import model.StatusQuarto;
+
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 
 public class GerenciamentoQuarto implements Gerenciamento {
-	
-    private ArrayList<Quarto> quartos;
+    private final ArrayList<Quarto> quartos;
+    private final Scanner sc;
+    private final GerenciamentoHotel gerenciamentoHotel;
 
-    public GerenciamentoQuarto() {
+    public GerenciamentoQuarto(Scanner scanner, GerenciamentoHotel gerenciamentoHotel) {
         this.quartos = new ArrayList<>();
+        this.sc = scanner;
+        this.gerenciamentoHotel = gerenciamentoHotel;
     }
 
+    public boolean reservarQuarto(int numQuarto) {
+        return alterarStatusQuarto(numQuarto, StatusQuarto.DISPONIVEL, StatusQuarto.RESERVADO,
+                                    "Quarto reservado com sucesso!", "Erro: quarto indisponível para reserva.");
+    }
+
+    public boolean liberarQuarto(int numQuarto) {
+        return alterarStatusQuarto(numQuarto, StatusQuarto.OCUPADO, StatusQuarto.DISPONIVEL,
+                                    "Quarto liberado com sucesso!", "Erro: quarto não está ocupado.");
+    }
+
+    public boolean ocuparQuarto(int numQuarto) {
+        return alterarStatusQuarto(numQuarto, StatusQuarto.RESERVADO, StatusQuarto.OCUPADO,
+                                    "Quarto ocupado com sucesso!", "Erro: apenas quartos reservados podem ser ocupados.");
+    }
+
+    private boolean alterarStatusQuarto(int numQuarto, StatusQuarto statusAtual, StatusQuarto novoStatus, String mensagemSucesso, String mensagemErro) {
+        Optional<Quarto> optionalQuarto = buscarQuartoPorNumero(numQuarto);
+
+        return optionalQuarto.map(quarto -> {
+            if (quarto.getStatus() == statusAtual) {
+                quarto.setStatus(novoStatus);
+                System.out.println(mensagemSucesso);
+                return true;
+            } else {
+                System.out.println(mensagemErro);
+                return false;
+            }
+        }).orElseGet(() -> {
+            System.out.println("Quarto não encontrado.");
+            return false;
+        });
+    }
+
+
+    public void listarQuartosDisponiveis() {
+        boolean encontrado = false;
+
+        for (Quarto quarto : quartos) {
+            if (quarto.isDisponivel()) {
+                System.out.println(quarto);
+                encontrado = true;
+            }
+        }
+        if (!encontrado) {
+            System.out.println("Não há quartos disponíveis no momento.");
+        }
+    }
+    
+    // Método auxiliar para buscar quarto pelo número e retorná-lo
+    protected Optional<Quarto> buscarQuartoPorNumero(int numQuarto) {
+        return quartos.stream()
+                      .filter(q -> q.getNumQuarto() == numQuarto)
+                      .findFirst();
+    }
+    
+    @Override
+    public void buscar() {
+        int numQuarto = gerenciamentoHotel.lerNumQuarto();
+        sc.nextLine(); // Consumir a nova linha
+
+        buscarQuartoPorNumero(numQuarto).ifPresentOrElse(
+            quarto -> System.out.println("Quarto encontrado: " + quarto),
+            () -> System.out.println("Quarto não encontrado.")
+        );
+    }
+    
     @Override
     public void adicionar() {
-    	
-        Scanner scanner = new Scanner(System.in);
-        
-        System.out.print("Número do quarto: ");
-        int numQuarto = scanner.nextInt();
-        scanner.nextLine(); // Consuming newline
-        
         System.out.print("Tipo do quarto (solteiro, casal, suíte): ");
-        String tipo = scanner.nextLine();
-        
-        System.out.print("Capacidade do quarto: ");
-        int capacidade = scanner.nextInt();
-        
-        System.out.print("Preço da diária: ");
-        double precoDiaria = scanner.nextDouble();
-        scanner.nextLine(); // Consuming newline
-        
-        System.out.print("Status do quarto (disponível/indisponível): ");
-        String status = scanner.nextLine();
+        String tipo = sc.nextLine();
 
-        Quarto novoQuarto = new Quarto(numQuarto, tipo, capacidade, precoDiaria, status);
-        
+        System.out.print("Capacidade do quarto: ");
+        int capacidade = gerenciamentoHotel.lerInt();
+
+        double precoDiaria = gerenciamentoHotel.lerPrecoDiariaValido();
+
+        Quarto novoQuarto = new Quarto(tipo, capacidade, precoDiaria);
         quartos.add(novoQuarto);
-        
+
         System.out.println("Quarto adicionado com sucesso!");
     }
 
     @Override
     public void editar() {
-    	
-        Scanner scanner = new Scanner(System.in);
+        int numQuarto = gerenciamentoHotel.lerNumQuarto();
 
-        System.out.print("Informe o número do quarto que deseja editar: ");
-        int numQuarto = scanner.nextInt();
-        scanner.nextLine(); // Consuming newline
+        buscarQuartoPorNumero(numQuarto).ifPresentOrElse(quarto -> {
+            System.out.print("Novo tipo do quarto: ");
+            quarto.setTipo(sc.nextLine());
 
-        Quarto quarto = buscarQuarto(numQuarto);
-        
-        if (quarto != null) {
-            System.out.print("Novo tipo de quarto: ");
-            quarto.setTipo(scanner.nextLine());
-            
             System.out.print("Nova capacidade: ");
-            quarto.setCapacidade(scanner.nextInt());
+            quarto.setCapacidade(gerenciamentoHotel.lerInt());
             
-            System.out.print("Novo preço da diária: ");
-            quarto.setPrecoDiaria(scanner.nextDouble());
-            scanner.nextLine(); // Consuming newline
-            
-            System.out.print("Novo status (disponível/indisponível): ");
-            quarto.setStatus(scanner.nextLine());
-            
+            System.out.print("Nova preco ");
+            quarto.setPrecoDiaria(gerenciamentoHotel.lerPrecoDiariaValido());
+
             System.out.println("Quarto atualizado com sucesso!");
-        } else {
-            System.out.println("Quarto não encontrado.");
-        }
+        }, () -> System.out.println("Quarto não encontrado."));
     }
 
     @Override
     public void excluir() {
-    	
-        Scanner scanner = new Scanner(System.in);
-
         System.out.print("Informe o número do quarto que deseja excluir: ");
-        int numQuarto = scanner.nextInt();
+        int numQuarto = gerenciamentoHotel.lerInt();
 
-        Quarto quarto = buscarQuarto(numQuarto);
-        
-        if (quarto != null) {
+        buscarQuartoPorNumero(numQuarto).ifPresentOrElse(quarto -> {
             quartos.remove(quarto);
             System.out.println("Quarto excluído com sucesso!");
-        } else {
-            System.out.println("Quarto não encontrado.");
-        }
+        }, () -> System.out.println("Quarto não encontrado."));
     }
 
     @Override
     public void listar() {
-    	
         if (quartos.isEmpty()) {
             System.out.println("Não há quartos cadastrados.");
         } else {
-            for (Quarto quarto : quartos) {
-                System.out.println(quarto);
-            }
+        	System.out.println("Listagem de Quartos do Hotel:");
+            quartos.forEach(System.out::println);
         }
     }
-
-    public void reservarQuarto(int numQuarto) {
-    	
-        Quarto quarto = buscarQuarto(numQuarto);
-        
-        if (quarto != null && quarto.getStatus().equalsIgnoreCase("disponível")) {
-            quarto.setStatus("indisponível");
-            System.out.println("Quarto " + numQuarto + " reservado com sucesso!");
-        } else if (quarto != null) {
-            System.out.println("Quarto não disponível para reserva.");
-        } else {
-            System.out.println("Quarto não encontrado.");
-        }
-    }
-
-    public void liberarQuarto(int numQuarto) {
-    	
-        Quarto quarto = buscarQuarto(numQuarto);
-        
-        if (quarto != null && quarto.getStatus().equalsIgnoreCase("indisponível")) {
-            quarto.setStatus("disponível");
-            System.out.println("Quarto " + numQuarto + " liberado com sucesso!");
-        } else if (quarto != null) {
-            System.out.println("Quarto já está disponível.");
-        } else {
-            System.out.println("Quarto não encontrado.");
-        }
-    }
-
-    public void listarQuartosDisponiveis() {
-    	
-        boolean encontrado = false;
-        
-        for (Quarto quarto : quartos) {
-            if (quarto.getStatus().equalsIgnoreCase("disponível")) {
-                System.out.println(quarto);
-                encontrado = true;
-            }
-        }
-        
-        if (!encontrado) {
-            System.out.println("Não há quartos disponíveis no momento.");
-        }
-    }
-
-   private Quarto buscarQuarto(int numQuarto) {
-	   
-        for (Quarto quarto : quartos) {
-            if (quarto.getNumQuarto() == numQuarto) {
-             return quarto;
-        }
-    }
-    return null;
- }
     
-    
-    
- 
-    // Getters, setters e outros métodos necessários
+    @Override
+    public Map<Integer, String> getOpcoesEspecificas() {
+        return Map.of(
+        	6, "Listar Quartos Disponíveis"
+        );
+    }
+
+    @Override
+    public void executarOpcaoEspecifica(int opcao, Scanner sc) {
+        switch (opcao) {
+        	case 6 -> listarQuartosDisponiveis();
+            
+            default -> System.out.println("Opção específica inválida");
+        }
+    }
 }
