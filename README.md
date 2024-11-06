@@ -1,1 +1,1 @@
-![Hotel (3)](https://github.com/user-attachments/assets/d7418d84-882f-4ef0-b73b-1243738f6059)
+![Hotel (4)](https://github.com/user-attachments/assets/19137cd8-5c52-45b4-b9b1-4f9f0eab8f43)
