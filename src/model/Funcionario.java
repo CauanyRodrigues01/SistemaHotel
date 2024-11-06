@@ -3,7 +3,7 @@ package model;
 public class Funcionario extends Pessoa {
 
 	private String cargo;
-	private Double salarioPorHora;
+	private double salarioPorHora;
 	private String turno;
 	private int horasTrabalhadas;
 
@@ -32,11 +32,11 @@ public class Funcionario extends Pessoa {
 		this.cargo = cargo;
 	}
 
-	public Double getSalarioPorHora() {
+	public double getSalarioPorHora() {
 		return salarioPorHora;
 	}
 
-	public void setSalarioPorHora(Double salarioPorHora) {
+	public void setSalarioPorHora(double salarioPorHora) {
 		this.salarioPorHora = salarioPorHora;
 	}
 
